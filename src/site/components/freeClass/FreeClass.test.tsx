@@ -4,6 +4,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { freeClassRequestSchema } from "@/site/data/freeClass";
 import { deliverFreeClassRequest } from "@/site/api/freeClass";
+import { SHEET_FORMS_URL } from "@/site/api/sheetForms";
 
 const submit = vi.fn();
 vi.mock("@/site/api/freeClass", async (original) => ({
@@ -57,57 +58,54 @@ describe("free class validation rules", () => {
   });
 });
 
-describe("free class delivery (server side)", () => {
-  beforeEach(() => vi.spyOn(console, "error").mockImplementation(() => {}));
-  afterEach(() => vi.restoreAllMocks());
-
-  it("refuses to report success when no destination is configured", async () => {
-    const send = vi.fn();
-    expect(await deliverFreeClassRequest(valid, () => undefined, send)).toEqual({
-      ok: false,
-      reason: "not_configured",
-    });
-    expect(send).not.toHaveBeenCalled();
-  });
-
-  it("delivers the request as JSON and succeeds only on a 2xx answer", async () => {
-    const send = vi.fn().mockResolvedValue(new Response("ok", { status: 200 }));
-    const env = (name: string) =>
-      ({
-        FREE_CLASS_WEBHOOK_URL: "https://hooks.example.test/free-class",
-        FREE_CLASS_WEBHOOK_TOKEN: "t0ken",
-      })[name];
-    expect(await deliverFreeClassRequest(valid, env, send)).toEqual({ ok: true });
+describe("free class delivery to the Google Sheet", () => {
+  it("sends the request to the sheet's free_class tab and succeeds only when the row is saved", async () => {
+    const send = vi
+      .fn()
+      .mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+    expect(await deliverFreeClassRequest(valid, send)).toEqual({ ok: true });
     const [url, init] = send.mock.calls[0]!;
-    expect(url).toBe("https://hooks.example.test/free-class");
-    expect(init.headers.authorization).toBe("Bearer t0ken");
-    expect(JSON.parse(init.body)).toMatchObject({
-      type: "free_class_request",
+    expect(url).toBe(SHEET_FORMS_URL);
+    expect(init.method).toBe("POST");
+    // text/plain avoids a CORS preflight, which Apps Script cannot answer.
+    expect(init.headers["content-type"]).toBe("text/plain;charset=utf-8");
+    const body = JSON.parse(init.body);
+    expect(body).toMatchObject({ form: "free_class", lang: "en" });
+    expect(body.data).toEqual({
       studentName: "Asha Verma",
       grade: "Class 6",
+      parentName: "Ravi Verma",
       mobile: "+919876512345",
-      email: null,
+      email: "",
+      city: "",
       interest: "Python",
       language: "Hindi",
       preferredTime: "Weekends",
-    });
-
-    send.mockResolvedValue(new Response("nope", { status: 500 }));
-    expect(await deliverFreeClassRequest(valid, env, send)).toEqual({
-      ok: false,
-      reason: "failed",
-    });
-    send.mockRejectedValue(new Error("offline"));
-    expect(await deliverFreeClassRequest(valid, env, send)).toEqual({
-      ok: false,
-      reason: "failed",
+      message: "",
     });
   });
 
-  it("rejects invalid data on the server too", async () => {
-    expect(
-      await deliverFreeClassRequest({ ...valid, mobile: "123" }, () => "https://x.test", vi.fn()),
-    ).toEqual({ ok: false, reason: "invalid" });
+  it("never reports success when the sheet did not save the row", async () => {
+    const send = vi.fn();
+    for (const answer of [
+      new Response(JSON.stringify({ ok: false, reason: "failed" }), { status: 200 }),
+      new Response("<html>error</html>", { status: 200 }),
+      new Response("nope", { status: 500 }),
+    ]) {
+      send.mockResolvedValueOnce(answer);
+      expect(await deliverFreeClassRequest(valid, send)).toEqual({ ok: false, reason: "failed" });
+    }
+    send.mockRejectedValueOnce(new Error("offline"));
+    expect(await deliverFreeClassRequest(valid, send)).toEqual({ ok: false, reason: "failed" });
+  });
+
+  it("rejects invalid data without sending it", async () => {
+    const send = vi.fn();
+    expect(await deliverFreeClassRequest({ ...valid, mobile: "123" }, send)).toEqual({
+      ok: false,
+      reason: "invalid",
+    });
+    expect(send).not.toHaveBeenCalled();
   });
 });
 

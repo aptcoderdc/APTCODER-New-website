@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
+import { CheckCircle2 } from 'lucide-react'
+import { sendToSheet } from '../api/sheetForms'
 import { pageHref, type Page } from '../page'
 import { useLanguage } from '../components/LanguageContext'
 import SocialLinks from '../components/SocialLinks'
@@ -16,10 +18,35 @@ interface Props {
 
 // Pages receive `navigate` (see AGENTS.md); this page no longer needs it.
 export default function ContactPage(_props: Props) {
-  const [formData, setFormData] = useState({
-    name: '', email: '', phone: '', role: '', topic: '', message: '',
-  })
+  const emptyForm = { name: '', email: '', phone: '', role: '', topic: '', message: '', website: '' }
+  const [formData, setFormData] = useState(emptyForm)
+  // idle → sending → sent (saved in the sheet) or failed; "sent" is shown only after the sheet confirms.
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle')
   const { t } = useLanguage()
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (status === 'sending') return
+    setStatus('sending')
+    const result = await sendToSheet(
+      'contact',
+      {
+        fullName: formData.name.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        role: formData.role,
+        topic: formData.topic,
+        message: formData.message.trim(),
+      },
+      formData.website,
+    )
+    if (result.ok) {
+      setFormData(emptyForm)
+      setStatus('sent')
+    } else {
+      setStatus('failed')
+    }
+  }
 
   return (
     <div>
@@ -71,15 +98,45 @@ export default function ContactPage(_props: Props) {
               <h2 className="text-2xl font-black text-gray-900 mb-2">Send Us a Message</h2>
               <p className="text-gray-500 text-sm mb-8">Fill in your details and we'll get back to you soon.</p>
 
+              {status === 'sent' ? (
+                <div className="rounded-3xl border border-green-100 bg-green-50/60 p-8" role="status">
+                  <CheckCircle2 className="h-10 w-10 text-green-600 mb-4" aria-hidden="true" />
+                  <h3 className="text-xl font-black text-gray-900 mb-2">Message sent. Thank you!</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                    We have received your message and our team will get back to you soon.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setStatus('idle')}
+                    className="rounded-full border border-gray-300 px-6 py-3 text-sm font-bold text-gray-800 hover:border-[#E8401C]"
+                  >
+                    Send another message
+                  </button>
+                </div>
+              ) : (
               <form
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={handleSubmit}
                 className="space-y-5"
               >
+                {/* Spam trap: hidden from people, so only bots fill it in. */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  value={formData.website}
+                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                  className="hidden"
+                />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1.5">Full Name *</label>
                     <input
                       type="text"
+                      required
+                      maxLength={120}
+                      autoComplete="name"
                       placeholder="Your full name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -90,6 +147,9 @@ export default function ContactPage(_props: Props) {
                     <label className="block text-xs font-semibold text-gray-700 mb-1.5">Email Address *</label>
                     <input
                       type="email"
+                      required
+                      maxLength={200}
+                      autoComplete="email"
                       placeholder="your@email.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -103,6 +163,11 @@ export default function ContactPage(_props: Props) {
                     <label className="block text-xs font-semibold text-gray-700 mb-1.5">Phone Number *</label>
                     <input
                       type="tel"
+                      required
+                      maxLength={20}
+                      pattern="[+0-9 \(\)\-]{7,20}"
+                      title="Phone number: digits, spaces and + only"
+                      autoComplete="tel"
                       placeholder="+91 00000 00000"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -112,6 +177,7 @@ export default function ContactPage(_props: Props) {
                   <div>
                     <label className="block text-xs font-semibold text-gray-700 mb-1.5">I am a *</label>
                     <select
+                      required
                       value={formData.role}
                       onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                       className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors bg-white"
@@ -129,6 +195,7 @@ export default function ContactPage(_props: Props) {
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1.5">What is this regarding? *</label>
                   <select
+                    required
                     value={formData.topic}
                     onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors bg-white"
@@ -146,6 +213,8 @@ export default function ContactPage(_props: Props) {
                   <label className="block text-xs font-semibold text-gray-700 mb-1.5">Your Message *</label>
                   <textarea
                     rows={4}
+                    required
+                    maxLength={2000}
                     placeholder="Tell us how we can help..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -153,12 +222,28 @@ export default function ContactPage(_props: Props) {
                   />
                 </div>
 
+                {status === 'failed' && (
+                  <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
+                    We couldn’t send your message just now. Please try again, or email{' '}
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline">
+                      {CONTACT_EMAIL}
+                    </a>{' '}
+                    or call{' '}
+                    <a href={CONTACT_PHONE_HREF} className="font-semibold underline">
+                      {CONTACT_PHONE}
+                    </a>
+                    .
+                  </p>
+                )}
+
                 <div className="flex items-center gap-4">
                   <button
                     type="submit"
-                    className="bg-[#E8401C] text-white font-bold rounded-full px-8 py-3.5 hover:bg-[#C73516] transition-colors flex items-center gap-2"
+                    disabled={status === 'sending'}
+                    aria-busy={status === 'sending'}
+                    className="bg-[#E8401C] text-white font-bold rounded-full px-8 py-3.5 hover:bg-[#C73516] transition-colors flex items-center gap-2 disabled:opacity-70 disabled:cursor-wait"
                   >
-                    Send Message →
+                    {status === 'sending' ? 'Sending…' : 'Send Message →'}
                   </button>
                   <p className="text-xs text-gray-400">
                     By clicking send, you agree to our{' '}
@@ -183,6 +268,7 @@ export default function ContactPage(_props: Props) {
                   </p>
                 </div>
               </form>
+              )}
             </div>
 
             {/* Contact info */}

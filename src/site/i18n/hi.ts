@@ -835,6 +835,18 @@ export const hi: Record<string, string> = {
   "FOR SCHOOL LEADERS": "स्कूल प्रमुखों के लिए",
   "Get the School Sales Kit": "स्कूल सेल्स किट पाएँ",
   "Your request is in.": "आपका अनुरोध मिल गया।",
+  // Form sending (Google Sheet): success and failure messages
+  "Message sent. Thank you!": "संदेश भेज दिया गया। धन्यवाद!",
+  "We have received your message and our team will get back to you soon.":
+    "हमें आपका संदेश मिल गया है, हमारी टीम जल्द ही आपसे संपर्क करेगी।",
+  "Send another message": "एक और संदेश भेजें",
+  "We couldn’t send your message just now. Please try again, or email":
+    "अभी आपका संदेश नहीं भेजा जा सका। कृपया फिर से कोशिश करें, या ईमेल करें",
+  "We couldn’t send your request just now. Please try again, or email":
+    "अभी आपका अनुरोध नहीं भेजा जा सका। कृपया फिर से कोशिश करें, या ईमेल करें",
+  "We couldn’t send your answers just now. Please try again, or email":
+    "अभी आपके जवाब नहीं भेजे जा सके। कृपया फिर से कोशिश करें, या ईमेल करें",
+  "or call": "या कॉल करें",
   "We’ll email the current school sales kit when it is available. No brochure file has been attached to this website yet.":
     "स्कूल सेल्स किट उपलब्ध होने पर हम उसे ईमेल कर देंगे। इस वेबसाइट पर अभी कोई ब्रोशर फ़ाइल नहीं जोड़ी गई है।",
   "Tell us where to send the latest program overview, curriculum summary and partnership information.":

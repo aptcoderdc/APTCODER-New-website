@@ -1,12 +1,51 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
+import { sendToSheet } from '../api/sheetForms'
+import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_HREF } from '../data/contact'
 
 interface Props {
   compact?: boolean
 }
 
 export default function SchoolSalesKit({ compact = false }: Props) {
+  const emptyForm = { fullName: '', email: '', school: '', role: '', website: '' }
   const [open, setOpen] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  const [form, setForm] = useState(emptyForm)
+  // "sent" is shown only after the Google Sheet confirms the request was saved.
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle')
+  const submitted = status === 'sent'
+  const field = (name: keyof typeof emptyForm) => ({
+    value: form[name],
+    onChange: (event: { target: { value: string } }) =>
+      setForm({ ...form, [name]: event.target.value }),
+  })
+
+  const close = () => {
+    if (status === 'sending') return
+    setOpen(false)
+    if (status !== 'idle') setStatus('idle')
+  }
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (status === 'sending') return
+    setStatus('sending')
+    const result = await sendToSheet(
+      'school_kit',
+      {
+        fullName: form.fullName.trim(),
+        email: form.email.trim(),
+        school: form.school.trim(),
+        role: form.role,
+      },
+      form.website,
+    )
+    if (result.ok) {
+      setForm(emptyForm)
+      setStatus('sent')
+    } else {
+      setStatus('failed')
+    }
+  }
 
   return (
     <>
@@ -28,7 +67,7 @@ export default function SchoolSalesKit({ compact = false }: Props) {
           aria-modal="true"
           aria-labelledby="school-kit-title"
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setOpen(false)
+            if (event.target === event.currentTarget) close()
           }}
         >
           <div className="w-full max-w-lg rounded-3xl bg-white shadow-2xl overflow-hidden">
@@ -42,7 +81,7 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                 </h2>
               </div>
               <button
-                onClick={() => setOpen(false)}
+                onClick={close}
                 className="w-9 h-9 rounded-full bg-white text-gray-500 hover:text-gray-900"
                 aria-label="Close"
               >
@@ -51,7 +90,7 @@ export default function SchoolSalesKit({ compact = false }: Props) {
             </div>
 
             {submitted ? (
-              <div className="p-8">
+              <div className="p-8" role="status">
                 <div className="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center font-black mb-4">
                   ✓
                 </div>
@@ -61,7 +100,7 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                   has been attached to this website yet.
                 </p>
                 <button
-                  onClick={() => setOpen(false)}
+                  onClick={close}
                   className="rounded-full bg-[#E8401C] px-6 py-3 text-sm font-bold text-white"
                 >
                   Done
@@ -70,11 +109,18 @@ export default function SchoolSalesKit({ compact = false }: Props) {
             ) : (
               <form
                 className="p-6 sm:p-8 space-y-4"
-                onSubmit={(event) => {
-                  event.preventDefault()
-                  setSubmitted(true)
-                }}
+                onSubmit={handleSubmit}
               >
+                {/* Spam trap: hidden from people, so only bots fill it in. */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  className="hidden"
+                  {...field('website')}
+                />
                 <p className="text-sm text-gray-500">
                   Tell us where to send the latest program overview, curriculum summary and
                   partnership information.
@@ -84,6 +130,9 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                     Full name
                     <input
                       required
+                      maxLength={120}
+                      autoComplete="name"
+                      {...field('fullName')}
                       className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C]"
                     />
                   </label>
@@ -92,6 +141,9 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                     <input
                       required
                       type="email"
+                      maxLength={200}
+                      autoComplete="email"
+                      {...field('email')}
                       className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C]"
                     />
                   </label>
@@ -100,6 +152,9 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                   School or institution
                   <input
                     required
+                    maxLength={200}
+                    autoComplete="organization"
+                    {...field('school')}
                     className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C]"
                   />
                 </label>
@@ -107,6 +162,7 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                   Your role
                   <select
                     required
+                    {...field('role')}
                     className="mt-1.5 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C]"
                   >
                     <option value="">Select role</option>
@@ -116,11 +172,26 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                     <option>Other decision maker</option>
                   </select>
                 </label>
+                {status === 'failed' && (
+                  <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
+                    We couldn’t send your request just now. Please try again, or email{' '}
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline">
+                      {CONTACT_EMAIL}
+                    </a>{' '}
+                    or call{' '}
+                    <a href={CONTACT_PHONE_HREF} className="font-semibold underline">
+                      {CONTACT_PHONE}
+                    </a>
+                    .
+                  </p>
+                )}
                 <button
                   type="submit"
-                  className="w-full rounded-full bg-[#E8401C] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#C73516] transition-colors"
+                  disabled={status === 'sending'}
+                  aria-busy={status === 'sending'}
+                  className="w-full rounded-full bg-[#E8401C] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#C73516] transition-colors disabled:opacity-70 disabled:cursor-wait"
                 >
-                  Email me the sales kit →
+                  {status === 'sending' ? 'Sending…' : 'Email me the sales kit →'}
                 </button>
                 <p className="text-center text-xs text-gray-400">
                   Your details will only be used to respond to this request.

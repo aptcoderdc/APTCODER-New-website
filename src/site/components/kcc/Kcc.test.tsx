@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { kccRegistrationSchema, normaliseIndianMobile } from "@/site/data/kcc";
 import { deliverKccRegistration } from "@/site/api/kcc";
+import { SHEET_FORMS_URL } from "@/site/api/sheetForms";
 
 const submit = vi.fn();
 vi.mock("@/site/api/kcc", async (original) => ({
@@ -45,49 +46,36 @@ describe("KCC validation rules", () => {
   });
 });
 
-describe("KCC delivery (server side)", () => {
-  beforeEach(() => vi.spyOn(console, "error").mockImplementation(() => {}));
-  afterEach(() => vi.restoreAllMocks());
-
-  it("refuses to report success when no destination is configured", async () => {
-    const send = vi.fn();
-    expect(await deliverKccRegistration(valid, () => undefined, send)).toEqual({
-      ok: false,
-      reason: "not_configured",
-    });
-    expect(send).not.toHaveBeenCalled();
-  });
-
-  it("delivers the registration as JSON and succeeds only on a 2xx answer", async () => {
-    const send = vi.fn().mockResolvedValue(new Response("ok", { status: 200 }));
-    const env = (name: string) =>
-      ({
-        KCC_REGISTRATION_WEBHOOK_URL: "https://hooks.example.test/kcc",
-        KCC_REGISTRATION_WEBHOOK_TOKEN: "t0ken",
-      })[name];
-    expect(await deliverKccRegistration(valid, env, send)).toEqual({ ok: true });
+describe("KCC delivery to the Google Sheet", () => {
+  it("sends the registration to the sheet's kcc tab and succeeds only when the row is saved", async () => {
+    const send = vi
+      .fn()
+      .mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+    expect(await deliverKccRegistration(valid, send)).toEqual({ ok: true });
     const [url, init] = send.mock.calls[0]!;
-    expect(url).toBe("https://hooks.example.test/kcc");
-    expect(init.headers.authorization).toBe("Bearer t0ken");
-    expect(JSON.parse(init.body)).toMatchObject({
+    expect(url).toBe(SHEET_FORMS_URL);
+    expect(init.headers["content-type"]).toBe("text/plain;charset=utf-8");
+    const body = JSON.parse(init.body);
+    expect(body.form).toBe("kcc");
+    expect(body.data).toMatchObject({
       studentName: "Asha Verma",
       mobile: "+919876512345",
       grade: "Class 6",
     });
 
-    send.mockResolvedValue(new Response("nope", { status: 500 }));
-    expect(await deliverKccRegistration(valid, env, send)).toEqual({ ok: false, reason: "failed" });
+    send.mockResolvedValue(new Response(JSON.stringify({ ok: false }), { status: 200 }));
+    expect(await deliverKccRegistration(valid, send)).toEqual({ ok: false, reason: "failed" });
     send.mockRejectedValue(new Error("offline"));
-    expect(await deliverKccRegistration(valid, env, send)).toEqual({ ok: false, reason: "failed" });
+    expect(await deliverKccRegistration(valid, send)).toEqual({ ok: false, reason: "failed" });
   });
 
-  it("rejects invalid data on the server too", async () => {
-    expect(
-      await deliverKccRegistration({ ...valid, mobile: "123" }, () => "https://x.test", vi.fn()),
-    ).toEqual({
+  it("rejects invalid data without sending it", async () => {
+    const send = vi.fn();
+    expect(await deliverKccRegistration({ ...valid, mobile: "123" }, send)).toEqual({
       ok: false,
       reason: "invalid",
     });
+    expect(send).not.toHaveBeenCalled();
   });
 });
 

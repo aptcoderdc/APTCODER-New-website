@@ -101,7 +101,7 @@ function whatsappHref(values: FormValues) {
 }
 
 /**
- * "Book a Free Class" popup. The request goes to the server (src/site/api/freeClass.ts), which
+ * "Book a Free Class" popup. The request goes to the APTCODER Google Sheet (src/site/api/freeClass.ts), which
  * forwards it to the configured destination; the success screen appears only when that
  * delivery succeeds.
  */

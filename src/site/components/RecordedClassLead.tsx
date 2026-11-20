@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, type FormEvent } from "react"
+import { sendToSheet } from "../api/sheetForms"
+import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_HREF } from "../data/contact"
 
 const interests = [
   "Coding & Games",
@@ -22,17 +24,39 @@ export default function RecordedClassLead() {
   const [experience, setExperience] = useState("")
   const [interest, setInterest] = useState("")
   const [watching, setWatching] = useState(false)
+  const [website, setWebsite] = useState("")
+  // The answers are saved in the Google Sheet before step 3 is shown.
+  const [status, setStatus] = useState<"idle" | "sending" | "failed">("idle")
+
+  const submitAnswers = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (!grade || !experience || !interest || status === "sending") return
+    setStatus("sending")
+    const result = await sendToSheet(
+      "recorded_class",
+      { parentName: parentName.trim(), email: email.trim(), grade, experience, interest },
+      website,
+    )
+    if (result.ok) {
+      setStatus("idle")
+      setStep(3)
+    } else {
+      setStatus("failed")
+    }
+  }
 
   useEffect(() => {
     if (!isOpen) return
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsOpen(false)
+      if (event.key === "Escape") close()
     }
     document.addEventListener("keydown", onKeyDown)
     return () => document.removeEventListener("keydown", onKeyDown)
   }, [isOpen])
 
-  const close = () => setIsOpen(false)
+  const close = () => {
+    if (status !== "sending") setIsOpen(false)
+  }
 
   return (
     <>
@@ -117,6 +141,8 @@ export default function RecordedClassLead() {
                   </span>
                   <input
                     required
+                    maxLength={120}
+                    autoComplete="name"
                     value={parentName}
                     onChange={(event) => setParentName(event.target.value)}
                     className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-primary"
@@ -129,6 +155,8 @@ export default function RecordedClassLead() {
                   <input
                     required
                     type="email"
+                    maxLength={200}
+                    autoComplete="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-primary"
@@ -148,12 +176,20 @@ export default function RecordedClassLead() {
 
             {step === 2 && (
               <form
-                onSubmit={(event) => {
-                  event.preventDefault()
-                  if (grade && experience && interest) setStep(3)
-                }}
+                onSubmit={submitAnswers}
                 className="space-y-6"
               >
+                {/* Spam trap: hidden from people, so only bots fill it in. */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  value={website}
+                  onChange={(event) => setWebsite(event.target.value)}
+                  className="hidden"
+                />
                 <fieldset>
                   <legend className="text-sm font-bold text-dark mb-3">
                     Child’s Grade
@@ -241,11 +277,26 @@ export default function RecordedClassLead() {
                     ))}
                   </div>
                 </fieldset>
+                {status === "failed" && (
+                  <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
+                    We couldn’t send your answers just now. Please try again, or email{" "}
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold underline">
+                      {CONTACT_EMAIL}
+                    </a>{" "}
+                    or call{" "}
+                    <a href={CONTACT_PHONE_HREF} className="font-semibold underline">
+                      {CONTACT_PHONE}
+                    </a>
+                    .
+                  </p>
+                )}
                 <button
                   type="submit"
-                  className="w-full rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-white hover:bg-primary-dark"
+                  disabled={status === "sending"}
+                  aria-busy={status === "sending"}
+                  className="w-full rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-white hover:bg-primary-dark disabled:opacity-70 disabled:cursor-wait"
                 >
-                  Show My Free Class →
+                  {status === "sending" ? "Sending…" : "Show My Free Class →"}
                 </button>
               </form>
             )}
