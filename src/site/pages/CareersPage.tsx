@@ -323,7 +323,7 @@ export default function CareersPage({ openings = jobOpenings }: Props) {
               <Mail className="h-7 w-7 text-primary max-sm:hidden" aria-hidden="true" />
               <a
                 href={`mailto:${CAREERS_EMAIL}`}
-                className="break-all font-bold text-dark hover:text-primary"
+                className="break-all font-bold text-dark hover:text-primary max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
               >
                 {CAREERS_EMAIL}
               </a>

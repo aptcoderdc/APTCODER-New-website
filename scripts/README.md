@@ -60,3 +60,19 @@ python3 -m pytest -q scripts/test_sync_course_catalogue.py
   `src/site/data/vernaticsCourses.ts`.
 - Thumbnails come from `src/site/data/courseThumbnails.json` and
   `scripts/build-course-thumbnails.py` (see `docs/course-thumbnails.md`).
+
+# Mobile layout check
+
+`scripts/layout-check.browser.js` loads every page at 320, 360, 375, 390, 430, 768 and 1024px
+and reports sideways scrolling, text under 11px and touch targets under 44px. It measures the
+real layout, so it runs in a browser rather than in `npm test` (no headless browser is
+installed):
+
+1. Start the dev server: `npm run dev` (http://localhost:8080).
+2. Open any page of it and paste the whole file into the developer console. The dev server
+   also serves it, so `(0, eval)((await import("/scripts/layout-check.browser.js?raw")).default)`
+   works too.
+3. After about three minutes it prints a table; the details are in `window.__layoutCheck`.
+
+Sideways scrolling, or text under 11px below 1024px, is a failure. Small touch targets are listed as warnings;
+links inside sentences and the footer's text links are not counted.

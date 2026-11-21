@@ -361,7 +361,7 @@ export default function CodelyDemo() {
                       disabled={busy}
                       aria-pressed={index === challengeIndex}
                       aria-label={`Challenge ${index + 1}: ${item.title}`}
-                      className={`h-8 w-8 rounded-full text-xs font-bold transition-colors disabled:opacity-40 ${
+                      className={`h-8 w-8 rounded-full text-xs font-bold transition-colors disabled:opacity-40 max-lg:h-11 max-lg:w-11 ${
                         index === challengeIndex
                           ? "bg-[#E8401C] text-white"
                           : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -519,7 +519,7 @@ export default function CodelyDemo() {
                             ] as const
                           ).map(([label, value]) => (
                             <div key={label} className="rounded-xl bg-[#FFF5F2] px-2 py-2">
-                              <dt className="text-[11px] sm:text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                              <dt className="text-[11px] lg:text-[10px] font-bold uppercase tracking-wide text-gray-500">
                                 {label}
                               </dt>
                               <dd className="text-xl font-black text-gray-900">{value}</dd>
@@ -653,7 +653,7 @@ export default function CodelyDemo() {
                 type="button"
                 onClick={clearProgram}
                 disabled={busy || program.length === 0}
-                className="flex items-center gap-1 rounded-full px-2 py-1 text-xs font-bold text-gray-500 hover:bg-white hover:text-gray-900 disabled:opacity-40"
+                className="flex items-center gap-1 rounded-full px-2 py-1 text-xs font-bold text-gray-500 hover:bg-white hover:text-gray-900 disabled:opacity-40 max-lg:min-h-11 max-lg:px-3"
               >
                 <Trash2 className="h-3.5 w-3.5" aria-hidden="true" /> Clear all
               </button>
@@ -708,7 +708,7 @@ export default function CodelyDemo() {
                           onClick={() => moveCommand(index, -1)}
                           disabled={busy || index === 0}
                           aria-label={`Move instruction ${index + 1} (${label}) up`}
-                          className="rounded-lg p-1.5 text-gray-500 hover:bg-white hover:text-gray-900 disabled:opacity-25"
+                          className="rounded-lg p-1.5 text-gray-500 hover:bg-white hover:text-gray-900 disabled:opacity-25 max-lg:flex max-lg:h-11 max-lg:w-11 max-lg:items-center max-lg:justify-center"
                         >
                           <ChevronUp className="h-4 w-4" aria-hidden="true" />
                         </button>
@@ -717,7 +717,7 @@ export default function CodelyDemo() {
                           onClick={() => moveCommand(index, 1)}
                           disabled={busy || index === program.length - 1}
                           aria-label={`Move instruction ${index + 1} (${label}) down`}
-                          className="rounded-lg p-1.5 text-gray-500 hover:bg-white hover:text-gray-900 disabled:opacity-25"
+                          className="rounded-lg p-1.5 text-gray-500 hover:bg-white hover:text-gray-900 disabled:opacity-25 max-lg:flex max-lg:h-11 max-lg:w-11 max-lg:items-center max-lg:justify-center"
                         >
                           <ChevronDown className="h-4 w-4" aria-hidden="true" />
                         </button>
@@ -726,7 +726,7 @@ export default function CodelyDemo() {
                           onClick={() => removeCommand(index)}
                           disabled={busy}
                           aria-label={`Delete instruction ${index + 1} (${label})`}
-                          className="rounded-lg p-1.5 text-gray-500 hover:bg-red-100 hover:text-red-600 disabled:opacity-25"
+                          className="rounded-lg p-1.5 text-gray-500 hover:bg-red-100 hover:text-red-600 disabled:opacity-25 max-lg:flex max-lg:h-11 max-lg:w-11 max-lg:items-center max-lg:justify-center"
                         >
                           <X className="h-4 w-4" aria-hidden="true" />
                         </button>
@@ -772,7 +772,7 @@ export default function CodelyDemo() {
                     busy ? "Stopped. The robot is back at the start." : READY_MESSAGE,
                   )
                 }
-                className="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-bold text-gray-500 hover:bg-white hover:text-gray-900"
+                className="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-bold text-gray-500 hover:bg-white hover:text-gray-900 max-lg:min-h-11"
               >
                 <RefreshCw className="h-4 w-4" aria-hidden="true" />
                 {busy ? "Stop" : "Reset"}

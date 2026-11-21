@@ -153,12 +153,12 @@ export default function VernaticsPage({ navigate }: Props) {
       {/* Hero: same split layout as the School and Contact heroes. */}
       <section className="relative overflow-hidden bg-white" aria-labelledby="vernatics-heading">
         <div className="absolute right-0 top-0 hidden h-full w-1/2 rounded-l-[80px] bg-peach lg:block" />
-        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-2 lg:gap-12 lg:px-8">
+        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 py-10 sm:px-6 sm:py-14 md:grid-cols-2 md:gap-8 lg:gap-12 lg:px-8">
           <div>
             <div className="section-label mb-4">MEET VERNATICS</div>
             <h1
               id="vernatics-heading"
-              className="mb-5 text-balance text-[2rem] font-black leading-[1.12] tracking-tight text-gray-900 sm:text-[2.6rem] lg:text-[2.5rem] xl:text-[2.75rem]"
+              className="mb-5 text-balance text-[2rem] font-black leading-[1.12] tracking-tight text-gray-900 sm:text-[2.6rem] md:text-[2.1rem] lg:text-[2.5rem] xl:text-[2.75rem]"
             >
               Meet Your First <span className="text-primary">Coding Robot.</span>
             </h1>
@@ -244,7 +244,8 @@ export default function VernaticsPage({ navigate }: Props) {
           </div>
           <div className="grid items-center gap-8 lg:grid-cols-[5fr_7fr] lg:gap-10">
             {/* Phones skip this photo: the same robot is in the video at the top of the page. */}
-            <div className="overflow-hidden rounded-3xl bg-peach-mid max-sm:hidden">
+            {/* Tablets: capped and centred rather than the full content width. */}
+            <div className="overflow-hidden rounded-3xl bg-peach-mid max-sm:hidden md:mx-auto md:w-full md:max-w-xl lg:max-w-none">
               <img
                 src={VERNATICS_POSTER_SRC}
                 alt="The Vernatics robot on a table with its LED matrix lit up"
@@ -304,7 +305,7 @@ export default function VernaticsPage({ navigate }: Props) {
                   href={VERNATICS_PORTAL_SRC}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-8 items-center text-primary"
+                  className="inline-flex min-h-11 items-center text-primary"
                 >
                   Open the screenshot full size ↗
                 </a>

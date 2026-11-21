@@ -41,7 +41,7 @@ function VideoCard({
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-t from-gray-950/90 via-gray-950/25 to-gray-950/10"
         />
-        <span className="relative m-4 inline-flex self-start rounded-full bg-white/95 px-3 py-1 text-[11px] sm:text-[10px] font-black tracking-widest text-primary shadow-sm">
+        <span className="relative m-4 inline-flex self-start rounded-full bg-white/95 px-3 py-1 text-[11px] lg:text-[10px] font-black tracking-widest text-primary shadow-sm">
           {testimonial.label}
         </span>
         <span
@@ -65,7 +65,7 @@ function QuoteCard({ testimonial }: { testimonial: QuoteTestimonial }) {
   const approved = testimonial.attributionApproved;
   return (
     <figure className={`${cardBase} p-6 sm:p-7`} data-testimonial-id={testimonial.id}>
-      <p className="relative mb-4 text-[11px] sm:text-[10px] font-black tracking-widest text-primary">
+      <p className="relative mb-4 text-[11px] lg:text-[10px] font-black tracking-widest text-primary">
         {testimonial.label}
       </p>
       <span

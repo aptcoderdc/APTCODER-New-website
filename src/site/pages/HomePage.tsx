@@ -265,7 +265,7 @@ export default function HomePage({ navigate }: Props) {
                   </p>
                   <CourseSubjectLink
                     subjects={homeCourseSubjects.heroPrograms}
-                    className="group inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-sm font-bold text-primary hover:text-primary-dark"
+                    className="group inline-flex shrink-0 items-center gap-1 whitespace-nowrap text-sm font-bold text-primary hover:text-primary-dark max-lg:min-h-11"
                   >
                     Explore Programs
                     <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
@@ -320,7 +320,7 @@ export default function HomePage({ navigate }: Props) {
                   setActiveProject(index)
                   setShowMorePossibilities(false)
                 }}
-                className={`shrink-0 rounded-full border px-4 py-2.5 text-xs sm:text-sm font-bold transition-colors ${
+                className={`shrink-0 rounded-full border px-4 py-2.5 text-xs sm:text-sm font-bold transition-colors max-lg:min-h-11 ${
                   activeProject === index
                     ? "border-primary bg-primary text-white"
                     : "border-gray-200 bg-white text-gray-600 hover:border-primary"
@@ -335,7 +335,7 @@ export default function HomePage({ navigate }: Props) {
               onClick={() =>
                 setShowMorePossibilities((isShowing) => !isShowing)
               }
-              className={`shrink-0 rounded-full border px-4 py-2.5 text-xs sm:text-sm font-black tracking-wide transition-colors ${
+              className={`shrink-0 rounded-full border px-4 py-2.5 text-xs sm:text-sm font-black tracking-wide transition-colors max-lg:min-h-11 ${
                 showMorePossibilities
                   ? "border-dark bg-dark text-white"
                   : "border-dark bg-white text-dark hover:bg-gray-50"
@@ -415,7 +415,7 @@ export default function HomePage({ navigate }: Props) {
                   </div>
                   <CourseSubjectLink
                     subjects={homeCourseSubjects.projects[selectedProject.title] ?? []}
-                    className={`inline-block text-sm font-black text-primary hover:text-primary-dark ${showProjectDetails ? "mt-4" : "sm:mt-4"}`}
+                    className={`inline-block text-sm font-black text-primary hover:text-primary-dark max-lg:inline-flex max-lg:min-h-11 max-lg:items-center ${showProjectDetails ? "mt-4" : "sm:mt-4"}`}
                   >
                     Explore Courses →
                   </CourseSubjectLink>
@@ -722,7 +722,7 @@ export default function HomePage({ navigate }: Props) {
                 <button
                   type="button"
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full flex items-start justify-between gap-4 text-left"
+                  className="w-full flex items-start justify-between gap-4 text-left max-lg:min-h-11 max-lg:items-center"
                   aria-expanded={openFaq === index}
                 >
                   <span className="font-bold text-dark">{faq.q}</span>

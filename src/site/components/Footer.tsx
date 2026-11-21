@@ -162,14 +162,14 @@ export default function Footer({ navigate }: FooterProps) {
               <div>
                 <a
                   href={`mailto:${CONTACT_EMAIL}`}
-                  className="inline-block text-gray-400 text-sm hover:text-white transition-colors"
+                  className="inline-flex items-center text-gray-400 text-sm hover:text-white transition-colors max-lg:min-h-11"
                 >
                   {CONTACT_EMAIL}
                 </a>
                 <br />
                 <a
                   href={CONTACT_PHONE_HREF}
-                  className="mt-1 inline-block text-gray-400 text-sm hover:text-white transition-colors"
+                  className="inline-flex items-center text-gray-400 text-sm hover:text-white transition-colors lg:mt-1 max-lg:min-h-11"
                 >
                   {CONTACT_PHONE}
                 </a>
@@ -194,7 +194,7 @@ export default function Footer({ navigate }: FooterProps) {
                 type="button"
                 onClick={openFreeClass}
                 aria-haspopup="dialog"
-                className="inline-block bg-[#E8401C] text-white text-sm font-semibold rounded-full px-5 py-2.5 hover:bg-[#C73516] transition-colors"
+                className="inline-block bg-[#E8401C] text-white text-sm font-semibold rounded-full px-5 py-2.5 hover:bg-[#C73516] transition-colors max-lg:min-h-11"
               >
                 {t("Book a Free Class →", "मुफ़्त क्लास बुक करें →")}
               </button>

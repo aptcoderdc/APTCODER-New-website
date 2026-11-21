@@ -46,11 +46,12 @@ export default function SchoolPage({ navigate }: Props) {
       {/* Hero */}
       <section className="relative overflow-hidden bg-white">
         <div className="absolute right-0 top-0 w-1/2 h-full bg-[#FFF5F2] rounded-l-[80px] -z-0" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+        {/* From 768px (tablets) text and picture sit side by side, as on desktop. */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-8 lg:gap-12 items-center">
           <div>
             <div className="section-label mb-4">{t('APTCODER FOR SCHOOLS', 'स्कूलों के लिए APTCODER')}</div>
             {/* Two lines on desktop; the offer (Coding, AI & Robotics) is highlighted. */}
-            <h1 className="text-[2rem] sm:text-[2.6rem] lg:text-[2.25rem] xl:text-[2.5rem] font-black text-gray-900 leading-[1.12] tracking-tight text-balance mb-5">
+            <h1 className="text-[2rem] sm:text-[2.6rem] md:text-[2rem] lg:text-[2.25rem] xl:text-[2.5rem] font-black text-gray-900 leading-[1.12] tracking-tight text-balance mb-5">
               {t('Bringing ', 'हर कक्षा में ')}
               <span className="text-[#E8401C]">{t('Coding, AI & Robotics', 'कोडिंग, AI और रोबोटिक्स')}</span>
               {t(' into Every Classroom.', ' की शिक्षा।')}
@@ -89,6 +90,11 @@ export default function SchoolPage({ navigate }: Props) {
           <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#FFE8E0]">
             <img
               src="https://images.unsplash.com/photo-1550706899-d71befa3b74f?w=700&h=500&fit=crop&auto=format"
+              srcSet="https://images.unsplash.com/photo-1550706899-d71befa3b74f?w=480&h=343&fit=crop&auto=format 480w, https://images.unsplash.com/photo-1550706899-d71befa3b74f?w=700&h=500&fit=crop&auto=format 700w, https://images.unsplash.com/photo-1550706899-d71befa3b74f?w=1000&h=714&fit=crop&auto=format 1000w, https://images.unsplash.com/photo-1550706899-d71befa3b74f?w=1400&h=1000&fit=crop&auto=format 1400w"
+              sizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw"
+              width={700}
+              height={500}
+              decoding="async"
               alt="Students using technology in classroom"
               className="w-full h-full object-cover"
             />
@@ -161,7 +167,7 @@ export default function SchoolPage({ navigate }: Props) {
                 { img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=300&h=200&fit=crop&auto=format', label: 'Assessment & Recognition' },
               ].map((item) => (
                 <div key={item.label} className="rounded-2xl overflow-hidden bg-gray-100 aspect-[4/3] relative group">
-                  <img src={item.img} alt={item.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <img src={item.img} alt={item.label} width={300} height={200} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
                     <p className="text-white text-xs font-semibold">{item.label}</p>
                   </div>

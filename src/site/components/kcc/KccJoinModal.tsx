@@ -185,7 +185,7 @@ export default function KccJoinModal({
             >
               {journey.map((stage, i) => (
                 <li key={stage} className="flex items-center gap-1">
-                  <span className="rounded-full bg-white px-2 py-1 text-[11px] sm:text-[10px] font-black tracking-wider text-dark shadow-sm">
+                  <span className="rounded-full bg-white px-2 py-1 text-[11px] lg:text-[10px] font-black tracking-wider text-dark shadow-sm">
                     {stage}
                   </span>
                   {i < journey.length - 1 && (

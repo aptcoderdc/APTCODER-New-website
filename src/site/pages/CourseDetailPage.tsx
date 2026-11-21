@@ -93,7 +93,7 @@ export default function CourseDetailPage({ course }: { course: CourseRecord }) {
     <main className="pb-24 lg:pb-0">
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
         <nav aria-label="Breadcrumb" className="text-sm text-gray-600">
-          <ol className="flex flex-wrap items-center gap-2">
+          <ol className="flex flex-wrap items-center gap-x-2 gap-y-0 max-lg:[&_a]:inline-flex max-lg:[&_a]:min-h-11 max-lg:[&_a]:items-center lg:gap-2">
             <li>
               <Link to="/courses" className="hover:text-[#E8401C]">
                 Courses
@@ -122,13 +122,14 @@ export default function CourseDetailPage({ course }: { course: CourseRecord }) {
       </div>
 
       <section className="bg-[#FFF5F2]">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-9 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:px-8 lg:py-14">
+        {/* From 768px the title and thumbnail sit side by side. */}
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-9 sm:px-6 md:grid-cols-[1fr_0.9fr] md:items-center lg:px-8 lg:py-14">
           <div>
             {isDisplayable(course.subject) && (
               <p className="section-label mb-4">{course.subject}</p>
             )}
             <h1
-              className="text-4xl font-black leading-tight text-gray-900 sm:text-5xl"
+              className="text-4xl font-black leading-tight text-gray-900 sm:text-5xl md:text-4xl lg:text-5xl"
               data-translate="no"
             >
               {course.title}
@@ -255,7 +256,7 @@ export default function CourseDetailPage({ course }: { course: CourseRecord }) {
               <div className="mt-4 divide-y divide-gray-200 rounded-2xl border border-gray-200">
                 {modules.map(([number, module]) => (
                   <details key={number} className="p-4" open={number === modules[0]?.[0]}>
-                    <summary className="cursor-pointer font-bold text-gray-900">
+                    <summary className="cursor-pointer font-bold text-gray-900 max-lg:py-2.5">
                       Module {number}: {module.title}
                     </summary>
                     <ol className="mt-3 space-y-3 pl-5 text-sm text-gray-700">
@@ -312,6 +313,8 @@ export default function CourseDetailPage({ course }: { course: CourseRecord }) {
                   <img
                     src={instructor.photoUrl}
                     alt={instructor.name}
+                    loading="lazy"
+                    decoding="async"
                     className="h-20 w-20 rounded-full object-cover"
                   />
                 )}
@@ -363,7 +366,7 @@ export default function CourseDetailPage({ course }: { course: CourseRecord }) {
               <div className="mt-4 divide-y divide-gray-200 border-y border-gray-200">
                 {course.faqs.map((faq) => (
                   <details key={faq.question} className="py-4">
-                    <summary className="cursor-pointer font-semibold text-gray-900">
+                    <summary className="cursor-pointer font-semibold text-gray-900 max-lg:py-2.5">
                       {faq.question}
                     </summary>
                     <p className="mt-3 leading-relaxed text-gray-700">{faq.answer}</p>
@@ -378,7 +381,9 @@ export default function CourseDetailPage({ course }: { course: CourseRecord }) {
             <div className="mt-4 divide-y divide-gray-200 border-y border-gray-200">
               {siteWideFaqs.map((faq) => (
                 <details key={faq.q} className="py-4">
-                  <summary className="cursor-pointer font-semibold text-gray-900">{faq.q}</summary>
+                  <summary className="cursor-pointer font-semibold text-gray-900 max-lg:py-2.5">
+                    {faq.q}
+                  </summary>
                   <p className="mt-3 leading-relaxed text-gray-700">{faq.a}</p>
                 </details>
               ))}

@@ -78,7 +78,11 @@ export default function LegalPage({ document: doc }: { document: LegalDocument }
     <main id="top" className="min-h-screen bg-white" data-translate="no">
       <div className="mx-auto max-w-3xl px-5 py-10 sm:px-8 sm:py-14">
         <header className="mb-10 border-b border-gray-100 pb-8">
-          <a href={pageHref("home")} aria-label="APTCODER home" className="mb-8 inline-block">
+          <a
+            href={pageHref("home")}
+            aria-label="APTCODER home"
+            className="mb-8 inline-flex min-h-11 items-center"
+          >
             <AptcoderLogo className="h-9 md:h-8 lg:h-10" eager />
           </a>
           <h1 className="mb-3 text-4xl font-black tracking-tight text-dark sm:text-5xl">

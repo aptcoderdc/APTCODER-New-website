@@ -78,4 +78,7 @@ something here conflicts with a new request.
 - Keep the existing design and change only what was asked; check the result in the browser
   preview (desktop and mobile) and with `npm test`. `GITHUB_PAGES=true PAGES_BASE_PATH="" npm run
   build:pages` reproduces the live build.
+- Mobile: phones are below 640px (Tailwind `max-sm:` / `sm:`), tablets 640–1023px, desktop from
+  1024px (`lg:`). Mobile-only changes use those variants so desktop stays unchanged. Before
+  committing layout changes, run `scripts/layout-check.browser.js` (see scripts/README.md).
 - Commit with clear messages and don't rewrite pushed history.

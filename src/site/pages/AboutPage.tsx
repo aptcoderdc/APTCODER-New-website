@@ -33,7 +33,8 @@ export default function AboutPage({ navigate }: Props) {
     <div>
       {/* Hero */}
       <section className="relative overflow-hidden bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+        {/* From 768px (tablets) text and picture sit side by side, as on desktop. */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-8 lg:gap-12 items-center">
           <div>
             <div className="section-label mb-4">{t('ABOUT APTCODER', 'APTCODER के बारे में')}</div>
             <h1 className="text-[2rem] sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-2">
@@ -65,6 +66,11 @@ export default function AboutPage({ navigate }: Props) {
           <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#FFE8E0]">
             <img
               src="https://images.unsplash.com/photo-1568585262983-9b54814595a9?w=700&h=500&fit=crop&auto=format"
+              srcSet="https://images.unsplash.com/photo-1568585262983-9b54814595a9?w=480&h=343&fit=crop&auto=format 480w, https://images.unsplash.com/photo-1568585262983-9b54814595a9?w=700&h=500&fit=crop&auto=format 700w, https://images.unsplash.com/photo-1568585262983-9b54814595a9?w=1000&h=714&fit=crop&auto=format 1000w, https://images.unsplash.com/photo-1568585262983-9b54814595a9?w=1400&h=1000&fit=crop&auto=format 1400w"
+              sizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw"
+              width={700}
+              height={500}
+              decoding="async"
               alt="Children collaborating and learning technology together"
               className="w-full h-full object-cover"
             />

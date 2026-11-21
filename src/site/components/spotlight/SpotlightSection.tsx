@@ -38,7 +38,7 @@ function CardBody({ entry }: { entry: NewsEntry }) {
         <p className="min-w-0 text-xs leading-snug font-black tracking-widest text-dark uppercase">
           {entry.publicationName}
         </p>
-        <span className="shrink-0 rounded-full bg-peach px-2 py-0.5 text-[11px] sm:text-[10px] font-bold text-primary">
+        <span className="shrink-0 rounded-full bg-peach px-2 py-0.5 text-[11px] lg:text-[10px] font-bold text-primary">
           {entry.kind}
         </span>
       </div>

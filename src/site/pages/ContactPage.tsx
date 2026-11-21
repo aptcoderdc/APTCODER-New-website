@@ -55,11 +55,12 @@ export default function ContactPage(_props: Props) {
       {/* Hero */}
       <section className="relative overflow-hidden bg-white">
         <div className="absolute right-0 top-0 w-1/2 h-full bg-[#FFF5F2] rounded-l-[80px] -z-0 max-sm:hidden" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        {/* From 768px (tablets) text and picture sit side by side, as on desktop. */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-8 lg:gap-12 items-center">
           <div>
             <div className="section-label mb-4">{t('CONTACT US', 'संपर्क करें')}</div>
             {/* At most two lines on desktop; "Together." is highlighted. */}
-            <h1 className="text-[2rem] sm:text-[2.6rem] lg:text-[2.5rem] xl:text-[2.75rem] font-black text-gray-900 leading-[1.12] tracking-tight text-balance mb-5">
+            <h1 className="text-[2rem] sm:text-[2.6rem] md:text-[2.1rem] lg:text-[2.5rem] xl:text-[2.75rem] font-black text-gray-900 leading-[1.12] tracking-tight text-balance mb-5">
               {t('Let’s Build What’s Next, ', 'आइए, ')}
               <span className="text-[#E8401C]">{t('Together.', 'साथ मिलकर')}</span>
               {t('', ' आगे का रास्ता बनाएँ।')}
@@ -95,6 +96,12 @@ export default function ContactPage(_props: Props) {
           <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#FFE8E0] max-sm:hidden">
             <img
               src="https://images.unsplash.com/photo-1568585219057-9206080e6c74?w=700&h=500&fit=crop&auto=format"
+              srcSet="https://images.unsplash.com/photo-1568585219057-9206080e6c74?w=480&h=343&fit=crop&auto=format 480w, https://images.unsplash.com/photo-1568585219057-9206080e6c74?w=700&h=500&fit=crop&auto=format 700w, https://images.unsplash.com/photo-1568585219057-9206080e6c74?w=1000&h=714&fit=crop&auto=format 1000w, https://images.unsplash.com/photo-1568585219057-9206080e6c74?w=1400&h=1000&fit=crop&auto=format 1400w"
+              sizes="(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw"
+              width={700}
+              height={500}
+              decoding="async"
+              loading="lazy"
               alt="Friendly student waving, ready to connect"
               className="w-full h-full object-cover"
             />
@@ -303,7 +310,7 @@ export default function ContactPage(_props: Props) {
                   <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-lg shrink-0">✉️</div>
                   <div>
                     <p className="font-bold text-gray-900 text-sm mb-0.5">Email Us</p>
-                    <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex min-h-11 items-center text-[#E8401C] text-sm font-semibold hover:underline sm:inline sm:min-h-0">{CONTACT_EMAIL}</a>
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex min-h-11 items-center text-[#E8401C] text-sm font-semibold hover:underline lg:inline lg:min-h-0">{CONTACT_EMAIL}</a>
                     <p className="text-xs text-gray-400 mt-1">We typically respond within 1–2 business days.</p>
                   </div>
                 </div>
@@ -311,7 +318,7 @@ export default function ContactPage(_props: Props) {
                   <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-lg shrink-0">📞</div>
                   <div>
                     <p className="font-bold text-gray-900 text-sm mb-0.5">Call Us</p>
-                    <a href={CONTACT_PHONE_HREF} className="inline-flex min-h-11 items-center text-gray-800 text-sm font-semibold hover:text-[#E8401C] transition-colors sm:inline sm:min-h-0">
+                    <a href={CONTACT_PHONE_HREF} className="inline-flex min-h-11 items-center text-gray-800 text-sm font-semibold hover:text-[#E8401C] transition-colors lg:inline lg:min-h-0">
                       {CONTACT_PHONE}
                     </a>
                     <p className="text-xs text-gray-400 mt-1">Mon – Sat, 9:00 AM – 6:00 PM (IST)</p>

@@ -96,7 +96,7 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
           {/* Logo */}
           <button
             onClick={() => navigate("home")}
-            className="flex items-center shrink-0"
+            className="flex min-h-11 items-center shrink-0"
             aria-label="APTCODER home"
           >
             {/* The full menu shows from 1024px; narrower screens use the menu button. */}
