@@ -1,13 +1,3 @@
-<!-- LOVABLE:BEGIN -->
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
-<!-- LOVABLE:END -->
 # Agent rules
 - Site pages/components live in src/site and receive a `navigate(page)` prop; useSiteNavigate maps page keys to file routes (keeps imported components unchanged).
 
@@ -25,9 +15,10 @@ something here conflicts with a new request.
   rendered from `/?spa-shell` so it does not take the home page's place in the prerender.
   To test a Pages build locally: `node scripts/serve-pages-build.mjs` (serves `dist/client`
   like GitHub Pages).
-- This repo started as a copy of KH11120/archive-unpack-and-play, which is still connected to
-  Lovable. Lovable edits do not reach this repo, so the Lovable block above applies only if Lovable
-  is connected here later.
+- This repo started as a copy of KH11120/archive-unpack-and-play (built with Lovable). It is no
+  longer connected to Lovable: the Lovable Vite preset, `.lovable/` and the editor hooks were
+  removed, and `vite.config.ts` now lists the plugins itself (TanStack Start, React, Tailwind,
+  tsconfig paths).
 - So far the owner has pushed from GitHub Desktop, and agents have committed locally.
 
 ## Course catalogue

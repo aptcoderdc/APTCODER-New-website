@@ -8,7 +8,7 @@ import {
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import Navbar from "@/site/components/Navbar";
 import Footer from "@/site/components/Footer";
 import WhatsAppButton from "@/site/components/WhatsAppButton";
@@ -22,7 +22,6 @@ import { pagePaths, type Page } from "@/site/page";
 import { useLocation } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 import { assetUrl } from "@/site/assetUrl";
 
 function NotFoundComponent() {
@@ -50,9 +49,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

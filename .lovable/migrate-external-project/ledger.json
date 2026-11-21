@@ -1,7 +1,0 @@
-[
- {"capability":"code","source":"Figma Make React/Vite SPA (5 pages, EN/HI toggle)","outcome":"migrate","status":"done","next_action":"none"},
- {"capability":"routing","source":"useState page switcher","outcome":"migrate to file routes","status":"done","next_action":"none"},
- {"capability":"schema/records/auth","source":"none detected","outcome":"not applicable","status":"verified","next_action":"none"},
- {"capability":"forms","source":"contact & lead forms are client-only (no submission backend)","outcome":"preserved as-is","status":"done","next_action":"optional: store submissions in Lovable Cloud"},
- {"capability":"secrets/integrations/webhooks","source":"none (only Figma platform vars)","outcome":"not applicable","status":"verified","next_action":"none"}
-]

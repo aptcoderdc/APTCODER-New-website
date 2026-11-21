@@ -1,24 +1,26 @@
 # APTCODER Website
 
-/skill:migrate-external-project Source: code archive. Migrate the attached project into Lovable.
+The APTCODER website, live at https://newweb.aptcoder.com/. It is a static site: every page is
+pre-rendered at build time and published to GitHub Pages on each push to `main`
+(`.github/workflows/deploy-pages.yml`).
 
-This project was built with [Lovable](https://lovable.dev).
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/0dbbaa96-86dc-476d-8247-b0c9c88ce526).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+Built with TanStack Start (React), Tailwind CSS and Vite. Site pages and components live in
+`src/site`, routes in `src/routes`. See `AGENTS.md` for project notes and `scripts/README.md`
+for the course catalogue sync, the layout check and local testing of the Pages build.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+You need Node.js 22 (and Bun, which the deploy uses to install dependencies).
 
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+bun install
+npm run dev          # http://localhost:8080
+npm test             # unit tests (Vitest)
+```
+
+## Build
+
+```sh
+GITHUB_PAGES=true PAGES_BASE_PATH="" npm run build:pages   # the live build, in dist/client
+node scripts/serve-pages-build.mjs                         # serve it like GitHub Pages
 ```

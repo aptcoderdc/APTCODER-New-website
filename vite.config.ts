@@ -1,15 +1,13 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - TanStack devtools (dev-only, first), tanstackStart, viteReact, tailwindcss, tsConfigPaths,
-//     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
-//     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { readFileSync } from "node:fs";
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import tsConfigPaths from "vite-tsconfig-paths";
 
 /**
- * GitHub Pages build (static site). Off by default, so the normal Lovable/Cloudflare build is
- * unchanged. Enabled by `npm run build:pages` (GITHUB_PAGES=true), used by
+ * GitHub Pages build (static site). Enabled by `npm run build:pages` (GITHUB_PAGES=true), used by
  * .github/workflows/deploy-pages.yml:
  *   - the site is served from a sub-path (PAGES_BASE_PATH, default "/archive-unpack-and-play/"),
  *   - no server build (GitHub Pages only serves files),
@@ -62,32 +60,63 @@ function staticPages(): { path: string }[] {
 }
 
 export default defineConfig({
-  ...(githubPages ? { vite: { base: pagesBase }, nitro: false } : {}),
-  tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
-    ...(githubPages
-      ? {
-          pages: staticPages(),
-          prerender: {
-            enabled: true,
-            crawlLinks: true,
-            failOnError: true,
-            // A query string or #section is the same page file; filters apply in the browser.
-            // The app shell below is the one exception: it is rendered from its own address.
-            filter: (page: { path: string }) =>
-              page.path === SPA_SHELL_PATH || !/[?#]/.test(page.path),
-          },
-          // App shell for any URL without its own page (GitHub Pages serves 404.html). It is
-          // rendered from its own address: at "/" it took the home page's place in the
-          // prerender, so the home page got no index.html of its own.
-          spa: {
-            enabled: true,
-            maskPath: SPA_SHELL_PATH,
-            prerender: { outputPath: "/404", crawlLinks: false },
-          },
-        }
-      : {}),
+  ...(githubPages ? { base: pagesBase } : {}),
+  server: { host: "::", port: 8080 },
+  resolve: {
+    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+    // One copy of React and React Query, even if a dependency brings its own.
+    dedupe: [
+      "react",
+      "react-dom",
+      "react/jsx-runtime",
+      "react/jsx-dev-runtime",
+      "@tanstack/react-query",
+      "@tanstack/query-core",
+    ],
   },
+  optimizeDeps: {
+    include: [
+      "react",
+      "react-dom",
+      "react-dom/client",
+      "react/jsx-runtime",
+      "react/jsx-dev-runtime",
+    ],
+  },
+  plugins: [
+    tailwindcss(),
+    tsConfigPaths({ projects: ["./tsconfig.json"] }),
+    tanstackStart({
+      // Code under a server/ folder (or marked server-only) may never reach the browser bundle.
+      importProtection: {
+        behavior: "error",
+        client: { files: ["**/server/**"], specifiers: ["server-only"] },
+      },
+      // Use src/server.ts (our SSR error wrapper) as the server entry.
+      server: { entry: "server" },
+      ...(githubPages
+        ? {
+            pages: staticPages(),
+            prerender: {
+              enabled: true,
+              crawlLinks: true,
+              failOnError: true,
+              // A query string or #section is the same page file; filters apply in the browser.
+              // The app shell below is the one exception: it is rendered from its own address.
+              filter: (page: { path: string }) =>
+                page.path === SPA_SHELL_PATH || !/[?#]/.test(page.path),
+            },
+            // App shell for any URL without its own page (GitHub Pages serves 404.html). It is
+            // rendered from its own address: at "/" it took the home page's place in the
+            // prerender, so the home page got no index.html of its own.
+            spa: {
+              enabled: true,
+              maskPath: SPA_SHELL_PATH,
+              prerender: { outputPath: "/404", crawlLinks: false },
+            },
+          }
+        : {}),
+    }),
+    viteReact(),
+  ],
 });

@@ -7,7 +7,7 @@ artwork scaled to fit and centred on a square canvas (aspect ratio kept, nothing
 
   public/favicon.ico                         16, 32, 48 px (browsers and bookmarks request
                                              /favicon.ico automatically; replaces the
-                                             Lovable template icon)
+                                             starter template's icon)
   public/images/brand/favicon-32x32.png      browser tabs
   public/images/brand/favicon-192x192.png    Android / high-density tabs
   public/images/brand/apple-touch-icon.png   180 px on white (iOS fills transparency with black)

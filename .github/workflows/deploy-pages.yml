@@ -4,7 +4,7 @@
 # "GitHub Actions". After that, every push to main (and the manual "Run workflow" button)
 # deploys to https://<owner>.github.io/<repo>/ (or your custom domain, if one is set).
 #
-# This only adds a static copy of the site; the Lovable/Cloudflare build is unaffected.
+# GitHub Pages is the only place the site is published.
 name: Deploy to GitHub Pages
 
 on:
