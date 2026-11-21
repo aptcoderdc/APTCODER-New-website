@@ -16,7 +16,12 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
  *   - every page is pre-rendered to static HTML, plus a 404.html app shell for other URLs.
  */
 const githubPages = process.env["GITHUB_PAGES"] === "true";
-const pagesBase = process.env["PAGES_BASE_PATH"] || "/archive-unpack-and-play/";
+const rawBase = process.env["PAGES_BASE_PATH"] ?? "/archive-unpack-and-play/";
+// GitHub Pages reports "/<repo>" for a project site and "" once a custom domain is bound.
+// A base of "/" makes the prerender skip the home page (no index.html for "/"), so the root
+// is expressed as "" — Vite then emits root-relative asset paths, which is what a custom
+// domain needs. Every other value keeps its trailing slash.
+const pagesBase = rawBase === "" || rawBase === "/" ? "" : rawBase.replace(/\/?$/, "/");
 
 /** Every page of the site, so the pre-render does not depend on finding links. */
 function staticPages(): { path: string }[] {

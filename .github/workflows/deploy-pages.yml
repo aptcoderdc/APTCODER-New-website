@@ -48,7 +48,8 @@ jobs:
         run: bun run build:pages
         env:
           # "/<repo>" for a project site, "" for a custom domain or <owner>.github.io repo.
-          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}/
+          # vite.config.ts adds the trailing slash itself; an empty value must stay empty.
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
       - name: Prepare the files
         run: |
