@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 /**
  * Floating "Chat with us on WhatsApp" button, shown on every page.
  *
@@ -23,9 +25,38 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
+/**
+ * Below 1024px (phones and tablets) the button slides away while the visitor scrolls down, so
+ * it does not sit on top of what they are reading, and comes back when they scroll up or stop.
+ */
+function useHideWhileScrollingDown() {
+  const [hidden, setHidden] = useState(false);
+  useEffect(() => {
+    const small = window.matchMedia?.("(max-width: 1023px)");
+    let lastY = window.scrollY;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (small?.matches && y > lastY + 4 && y > 120) setHidden(true);
+      else if (y < lastY - 4) setHidden(false);
+      lastY = y;
+      clearTimeout(timer);
+      timer = setTimeout(() => setHidden(false), 900);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+    };
+  }, []);
+  return hidden;
+}
+
 export default function WhatsAppButton() {
+  const hidden = useHideWhileScrollingDown();
   return (
     <a
+      data-scroll-hidden={hidden || undefined}
       href={WHATSAPP_URL}
       target="_blank"
       rel="noopener noreferrer"

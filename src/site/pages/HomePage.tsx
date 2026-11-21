@@ -282,7 +282,7 @@ export default function HomePage({ navigate }: Props) {
       </section>
 
       <section
-        className="pt-14 pb-16 sm:pt-16 sm:pb-20 bg-white"
+        className="pt-10 pb-12 sm:pt-16 sm:pb-20 bg-white"
         aria-labelledby="project-builder-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -478,7 +478,7 @@ export default function HomePage({ navigate }: Props) {
 
       {/* Same background as Try Codely above, so only a modest top padding is needed. */}
       <section
-        className="pt-8 pb-16 sm:pt-10 sm:pb-20 bg-peach"
+        className="pt-8 pb-12 sm:pt-10 sm:pb-20 bg-peach"
         aria-labelledby="offerings-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -684,7 +684,7 @@ export default function HomePage({ navigate }: Props) {
       <RecordedClassLead />
 
       <section
-        className="py-16 sm:py-20 bg-white"
+        className="py-12 sm:py-20 bg-white"
         aria-labelledby="faq-heading"
       >
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -726,7 +726,7 @@ export default function HomePage({ navigate }: Props) {
         </div>
       </section>
 
-      <section className="py-16 bg-peach">
+      <section className="py-12 sm:py-16 bg-peach">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-xs font-black tracking-widest text-primary mb-3">
             READY TO BEGIN?

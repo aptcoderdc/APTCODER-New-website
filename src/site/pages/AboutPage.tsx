@@ -107,27 +107,27 @@ export default function AboutPage({ navigate }: Props) {
       </section>
 
       {/* Mission, Vision, Belief */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-14 sm:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-label mb-3">OUR PURPOSE</div>
           <h2 className="text-3xl font-black text-gray-900 mb-10">Our Mission, Vision and Belief</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-2xl p-7 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-2xl p-5 sm:p-7 shadow-sm border border-gray-100">
               <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl mb-5">🎯</div>
               <h3 className="font-black text-gray-900 text-lg mb-3">Our Mission</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
                 To make coding and technology education accessible, engaging and meaningful for every child — in the language they understand best.
               </p>
             </div>
-            <div className="bg-white rounded-2xl p-7 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-2xl p-5 sm:p-7 shadow-sm border border-gray-100">
               <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-5">👁️</div>
               <h3 className="font-black text-gray-900 text-lg mb-3">Our Vision</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
                 A future where every child, regardless of background or location, can confidently use technology to create, solve and contribute to a better world.
               </p>
             </div>
-            <div className="bg-white rounded-2xl p-7 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-2xl p-5 sm:p-7 shadow-sm border border-gray-100">
               <div className="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center text-2xl mb-5">❤️</div>
               <h3 className="font-black text-gray-900 text-lg mb-3">What We Believe</h3>
               <ul className="space-y-2">
@@ -149,7 +149,7 @@ export default function AboutPage({ navigate }: Props) {
       </section>
 
       {/* Impact stats */}
-      <section className="py-16 bg-white">
+      <section className="py-12 sm:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-black text-gray-900 mb-2">Our Impact So Far</h2>
           <p className="text-gray-500 mb-10">A growing community of learners, teachers and partner institutions.</p>
@@ -158,7 +158,7 @@ export default function AboutPage({ navigate }: Props) {
       </section>
 
       {/* Journey timeline */}
-      <section className="py-20 bg-[#FFF5F2]">
+      <section className="py-14 sm:py-20 bg-[#FFF5F2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-black text-gray-900 mb-2">Our Journey</h2>
           <p className="text-gray-500 mb-12">From a vision to a growing global community.</p>
@@ -221,7 +221,7 @@ export default function AboutPage({ navigate }: Props) {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-[#FFF5F2]">
+      <section className="py-12 sm:py-16 bg-[#FFF5F2]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             <div>

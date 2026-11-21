@@ -38,7 +38,7 @@ function CardBody({ entry }: { entry: NewsEntry }) {
         <p className="min-w-0 text-xs leading-snug font-black tracking-widest text-dark uppercase">
           {entry.publicationName}
         </p>
-        <span className="shrink-0 rounded-full bg-peach px-2 py-0.5 text-[10px] font-bold text-primary">
+        <span className="shrink-0 rounded-full bg-peach px-2 py-0.5 text-[11px] sm:text-[10px] font-bold text-primary">
           {entry.kind}
         </span>
       </div>
@@ -209,7 +209,7 @@ export default function SpotlightSection() {
     "flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-dark shadow-sm transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
   return (
-    <section className="bg-white py-16 sm:py-20" aria-labelledby="spotlight-heading">
+    <section className="bg-white py-12 sm:py-20" aria-labelledby="spotlight-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-7 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 sm:mb-8">
           <div className="min-w-0">

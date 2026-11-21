@@ -93,21 +93,64 @@ describe("navbar", () => {
 
   it("uses the same destinations in the mobile menu", () => {
     withProviders(<Navbar currentPage="home" navigate={vi.fn()} />);
-    fireEvent.click(screen.getByRole("button", { name: /menu/i }));
-    const signIns = screen.getAllByRole("link", { name: "Sign In" });
-    const joins = screen.getAllByRole("link", { name: "Join for Free" });
-    expect(signIns).toHaveLength(2);
-    expect(joins).toHaveLength(2);
-    for (const link of signIns)
-      expect(link).toHaveAttribute(
-        "href",
-        "https://coding.app.staging.platform.aptcoder.com/login",
+    fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+    const menu = within(screen.getByRole("dialog", { name: "Menu" }));
+    expect(menu.getByRole("link", { name: "Sign In" })).toHaveAttribute(
+      "href",
+      "https://coding.app.staging.platform.aptcoder.com/login",
+    );
+    expect(menu.getByRole("link", { name: "Join for Free" })).toHaveAttribute(
+      "href",
+      "https://coding.app.staging.platform.aptcoder.com/signup",
+    );
+  });
+
+  it("mobile menu lists every section and closes when one is chosen", () => {
+    const navigate = vi.fn();
+    withProviders(<Navbar currentPage="school" navigate={navigate} />);
+    fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+    const menu = within(screen.getByRole("dialog", { name: "Menu" }));
+    expect(menu.getByRole("button", { name: /School/ })).toHaveAttribute("aria-current", "page");
+    fireEvent.keyDown(screen.getByRole("dialog", { name: "Menu" }), { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Menu" })).toBeNull();
+    for (const [label, page] of [
+      [/Courses/, "courses"],
+      [/Vernatics/, "vernatics"],
+      [/C-NAT/, "cnat"],
+      [/About/, "about"],
+      [/Contact Us/, "contact"],
+      [/Careers/, "careers"],
+    ] as const) {
+      fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+      fireEvent.click(
+        within(screen.getByRole("dialog", { name: "Menu" })).getByRole("button", { name: label }),
       );
-    for (const link of joins)
-      expect(link).toHaveAttribute(
-        "href",
-        "https://coding.app.staging.platform.aptcoder.com/signup",
-      );
+      expect(navigate).toHaveBeenLastCalledWith(page, undefined);
+      expect(screen.queryByRole("dialog", { name: "Menu" })).toBeNull();
+    }
+  });
+
+  it("mobile menu search goes to the course search", () => {
+    const navigate = vi.fn();
+    withProviders(<Navbar currentPage="home" navigate={navigate} />);
+    fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+    fireEvent.click(
+      within(screen.getByRole("dialog", { name: "Menu" })).getByRole("button", {
+        name: "Search courses",
+      }),
+    );
+    expect(navigate).toHaveBeenCalledWith("courses", sectionIds.courseSearch);
+  });
+
+  it("mobile menu opens the KCC popup", () => {
+    withProviders(<Navbar currentPage="home" navigate={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
+    fireEvent.click(
+      within(screen.getByRole("dialog", { name: "Menu" })).getByRole("button", {
+        name: /Kids Coding Community/,
+      }),
+    );
+    expect(screen.getByRole("dialog")).toHaveTextContent("Become a KCC Member");
   });
 });
 

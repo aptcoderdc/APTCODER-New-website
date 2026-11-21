@@ -3,6 +3,7 @@ import SchoolSalesKit from '../components/SchoolSalesKit'
 import { partnerSchools } from '../data/schools'
 import { useLanguage } from '../components/LanguageContext'
 import StatGrid, { type Stat } from '../components/StatGrid'
+import SwipeRow from '../components/SwipeRow'
 
 interface Props {
   navigate: SiteNavigate
@@ -124,7 +125,7 @@ export default function SchoolPage({ navigate }: Props) {
       </section>
 
       {/* Why AptCoder */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-14 sm:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -167,7 +168,7 @@ export default function SchoolPage({ navigate }: Props) {
       </section>
 
       {/* Impact in schools */}
-      <section className="py-16 bg-[#FFF5F2]">
+      <section className="py-12 sm:py-16 bg-[#FFF5F2]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="section-label justify-center mb-3">OUR IMPACT IN SCHOOLS</div>
           <h2 className="text-3xl font-black text-gray-900 mb-12">Building a Stronger, Smarter Generation</h2>
@@ -176,7 +177,7 @@ export default function SchoolPage({ navigate }: Props) {
       </section>
 
       {/* How it works */}
-      <section className="py-20 bg-white">
+      <section className="py-14 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-label mb-3">HOW IT WORKS</div>
           <div className="mb-10">
@@ -184,18 +185,27 @@ export default function SchoolPage({ navigate }: Props) {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((step, i) => (
-              <div key={step.num} className="relative">
+              <div key={step.num} className="relative max-sm:flex max-sm:gap-4">
                 {i < steps.length - 1 && (
                   <div className="hidden lg:block absolute top-6 left-full w-full h-0.5 bg-gray-100 z-0 -translate-x-4" />
                 )}
+                {/* Phones: a vertical line joins the numbers (number on the left, text beside it). */}
+                {i < steps.length - 1 && (
+                  <div
+                    aria-hidden="true"
+                    className="sm:hidden absolute left-6 top-12 -bottom-6 w-0.5 -translate-x-1/2 bg-gray-200"
+                  />
+                )}
                 <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-white font-black text-lg mb-5 relative z-10"
+                  className="w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-white font-black text-lg mb-5 max-sm:mb-0 relative z-10"
                   style={{ background: ['#E8401C', '#3B82F6', '#10B981', '#8B5CF6'][i] }}
                 >
                   {step.num}
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">{step.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
+                <div className="max-sm:pt-2.5">
+                  <h3 className="font-bold text-gray-900 mb-2 max-sm:mb-1">{step.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -203,31 +213,37 @@ export default function SchoolPage({ navigate }: Props) {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-14 sm:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="section-label mb-3">WHAT SCHOOLS SAY</div>
           <h2 className="text-3xl font-black text-gray-900 mb-10">Trusted by Educators and School Leaders</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {schoolTestimonials.map((t, i) => (
-              <div key={i} className="bg-white rounded-2xl p-7 shadow-sm border border-gray-100">
-                <p className="text-gray-700 text-sm leading-relaxed italic mb-6">{t.quote}</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#FFF5F2] flex items-center justify-center text-[#E8401C] font-bold text-sm">
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <p className="font-bold text-gray-900 text-sm">{t.name}</p>
-                    <p className="text-xs text-gray-400">{t.school}</p>
+          {/* A swipeable row on phones; the grid from 640px. */}
+          <SwipeRow
+            label="What schools say"
+            gridClassName="grid grid-cols-1 md:grid-cols-3 gap-6"
+            items={schoolTestimonials.map((t) => ({
+              key: t.name,
+              node: (
+                <div className="h-full bg-white rounded-2xl p-6 sm:p-7 shadow-sm border border-gray-100">
+                  <p className="text-gray-700 text-sm leading-relaxed italic mb-6">{t.quote}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-[#FFF5F2] flex items-center justify-center text-[#E8401C] font-bold text-sm">
+                      {t.name[0]}
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-900 text-sm">{t.name}</p>
+                      <p className="text-xs text-gray-400">{t.school}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ),
+            }))}
+          />
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-[#FFF5F2]">
+      <section className="py-12 sm:py-16 bg-[#FFF5F2]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-black text-gray-900 mb-4">
             Let's Bring Future-Ready Learning to Your School

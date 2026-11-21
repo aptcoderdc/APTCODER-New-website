@@ -15,6 +15,13 @@ import { CONTACT_PHONE } from "@/site/data/contact";
 import { WHATSAPP_NUMBER } from "@/site/components/WhatsAppButton";
 import { submitFreeClassRequest } from "@/site/api/freeClass";
 import { FIELD_TEXT } from "../formFieldStyles";
+import {
+  POPUP_ACTIONS,
+  POPUP_CLOSE,
+  POPUP_CLOSE_WRAP,
+  POPUP_CONTENT,
+  POPUP_OVERLAY,
+} from "../popupStyles";
 
 /** Form values before validation (the consent box starts unticked). */
 type FormValues = Omit<FreeClassRequest, "consent"> & { consent: boolean };
@@ -160,18 +167,20 @@ export default function FreeClassModal({
   return (
     <DialogPrimitive.Root open={open} onOpenChange={handleOpenChange}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-gray-950/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0" />
+        <DialogPrimitive.Overlay className={POPUP_OVERLAY} />
         <DialogPrimitive.Content
-          className="fixed left-1/2 top-1/2 z-50 max-h-[calc(100dvh-1.5rem)] w-[calc(100vw-1.5rem)] max-w-2xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-3xl bg-white shadow-[0_30px_80px_-20px_rgba(17,24,39,0.5)] outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
+          className={`${POPUP_CONTENT} sm:max-w-2xl`}
           aria-describedby="fc-description"
         >
-          <DialogPrimitive.Close
-            className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-gray-500 shadow-sm ring-1 ring-black/5 transition-colors hover:text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            aria-label="Close"
-            disabled={isSubmitting}
-          >
-            <X className="h-4 w-4" aria-hidden="true" />
-          </DialogPrimitive.Close>
+          <div className={POPUP_CLOSE_WRAP}>
+            <DialogPrimitive.Close
+              className={POPUP_CLOSE}
+              aria-label="Close"
+              disabled={isSubmitting}
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </DialogPrimitive.Close>
+          </div>
 
           {submitted ? (
             <div
@@ -454,20 +463,22 @@ export default function FreeClassModal({
                   </div>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark disabled:cursor-wait disabled:opacity-80"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                      Sending…
-                    </>
-                  ) : (
-                    "Request My Free Class →"
-                  )}
-                </button>
+                <div className={`${POPUP_ACTIONS} -mx-6`}>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark disabled:cursor-wait disabled:opacity-80"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                        Sending…
+                      </>
+                    ) : (
+                      "Request My Free Class →"
+                    )}
+                  </button>
+                </div>
               </form>
             </>
           )}

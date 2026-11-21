@@ -17,6 +17,13 @@ import { KCC_GRADES, kccRegistrationSchema, type KccRegistration } from "@/site/
 import { CONTACT_PHONE } from "@/site/data/contact";
 import { submitKccRegistration } from "@/site/api/kcc";
 import { FIELD_TEXT } from "../formFieldStyles";
+import {
+  POPUP_ACTIONS,
+  POPUP_CLOSE,
+  POPUP_CLOSE_WRAP,
+  POPUP_CONTENT,
+  POPUP_OVERLAY,
+} from "../popupStyles";
 
 const journey = ["LEARN", "BUILD", "SHARE", "SOLVE", "GROW"];
 
@@ -133,18 +140,20 @@ export default function KccJoinModal({
   return (
     <DialogPrimitive.Root open={open} onOpenChange={handleOpenChange}>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-gray-950/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0" />
+        <DialogPrimitive.Overlay className={POPUP_OVERLAY} />
         <DialogPrimitive.Content
-          className="fixed left-1/2 top-1/2 z-50 grid max-h-[calc(100dvh-1.5rem)] w-[calc(100vw-1.5rem)] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto overscroll-contain rounded-3xl bg-white shadow-[0_30px_80px_-20px_rgba(17,24,39,0.5)] outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 md:grid-cols-[5fr_6fr] md:overflow-hidden"
+          className={`${POPUP_CONTENT} grid content-start sm:max-w-4xl md:grid-cols-[5fr_6fr] md:overflow-hidden`}
           aria-describedby="kcc-modal-description"
         >
-          <DialogPrimitive.Close
-            className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-gray-500 shadow-sm ring-1 ring-black/5 transition-colors hover:text-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            aria-label="Close"
-            disabled={isSubmitting}
-          >
-            <X className="h-4 w-4" aria-hidden="true" />
-          </DialogPrimitive.Close>
+          <div className={POPUP_CLOSE_WRAP}>
+            <DialogPrimitive.Close
+              className={POPUP_CLOSE}
+              aria-label="Close"
+              disabled={isSubmitting}
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </DialogPrimitive.Close>
+          </div>
 
           {/* About the community */}
           <section className="bg-peach px-6 py-7 sm:px-8 md:max-h-[calc(100dvh-1.5rem)] md:overflow-y-auto">
@@ -176,7 +185,7 @@ export default function KccJoinModal({
             >
               {journey.map((stage, i) => (
                 <li key={stage} className="flex items-center gap-1">
-                  <span className="rounded-full bg-white px-2 py-1 text-[10px] font-black tracking-wider text-dark shadow-sm">
+                  <span className="rounded-full bg-white px-2 py-1 text-[11px] sm:text-[10px] font-black tracking-wider text-dark shadow-sm">
                     {stage}
                   </span>
                   {i < journey.length - 1 && (
@@ -199,8 +208,9 @@ export default function KccJoinModal({
             </ul>
           </section>
 
-          {/* Join the community */}
-          <section className="px-6 py-7 sm:px-8 md:max-h-[calc(100dvh-1.5rem)] md:overflow-y-auto">
+          {/* Join the community. Phones (one column) show the form first and the "about"
+              section after it; from 768px the two sit side by side as before. */}
+          <section className="-order-1 px-6 py-7 sm:px-8 md:order-none md:max-h-[calc(100dvh-1.5rem)] md:overflow-y-auto">
             {status === "success" ? (
               <div
                 className="flex h-full flex-col items-center justify-center py-10 text-center"
@@ -367,20 +377,22 @@ export default function KccJoinModal({
                       {failureMessage[failure]}
                     </p>
                   )}
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark disabled:cursor-wait disabled:opacity-80"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                        Sending…
-                      </>
-                    ) : (
-                      "Join the KCC Community →"
-                    )}
-                  </button>
+                  <div className={`${POPUP_ACTIONS} -mx-6`}>
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark disabled:cursor-wait disabled:opacity-80"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                          Sending…
+                        </>
+                      ) : (
+                        "Join the KCC Community →"
+                      )}
+                    </button>
+                  </div>
                 </form>
               </>
             )}

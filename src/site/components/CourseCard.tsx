@@ -55,9 +55,11 @@ export default function CourseCard({ course }: { course: CourseRecord }) {
       to="/courses/$slug"
       params={{ slug: course.routeSlug }}
       aria-label={`View course: ${course.title}`}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8401C]"
+      className="group relative flex h-full flex-row overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8401C] sm:flex-col"
     >
-      <div className="relative aspect-video overflow-hidden bg-[#FFF5F2]">
+      {/* Phones (below 640px): a compact row, thumbnail on the left and details on the right,
+          so several courses fit on one screen. From 640px: the original tall card. */}
+      <div className="relative aspect-video w-[38%] shrink-0 self-start overflow-hidden bg-[#FFF5F2] max-sm:m-3 max-sm:rounded-xl sm:w-full">
         {course.thumbnailUrl && failedSrc !== course.thumbnailUrl ? (
           <img
             src={course.thumbnailUrl}
@@ -77,33 +79,38 @@ export default function CourseCard({ course }: { course: CourseRecord }) {
             <Code2 className="h-10 w-10 opacity-70" />
           </div>
         )}
-        <div className="absolute inset-x-3 top-3 flex items-start justify-between gap-2">
+      </div>
+
+      <div className="flex min-w-0 flex-1 flex-col py-3 pr-3 sm:p-5">
+        {/* Grade and learning model: in the text on phones, over the image from 640px. */}
+        <div className="mb-1.5 flex flex-wrap items-start gap-1.5 sm:absolute sm:inset-x-3 sm:top-3 sm:mb-0 sm:flex-nowrap sm:justify-between sm:gap-2">
           {gradeLabel && (
-            <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-gray-800 shadow-sm">
+            <span className="rounded-full bg-[#FFF5F2] px-2.5 py-0.5 text-xs font-bold text-gray-800 sm:bg-white sm:px-3 sm:py-1 sm:shadow-sm">
               {gradeLabel}
             </span>
           )}
           {displayLearningModel(course.learningModel) && (
-            <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-gray-800 shadow-sm">
+            <span className="rounded-full bg-[#FFF5F2] px-2.5 py-0.5 text-xs font-bold text-gray-800 sm:bg-white sm:px-3 sm:py-1 sm:shadow-sm">
               {displayLearningModel(course.learningModel)}
             </span>
           )}
         </div>
-      </div>
 
-      <div className="flex flex-1 flex-col p-5">
         {isDisplayable(course.subject) && (
-          <span className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-500">
+          <span className="mb-1 text-xs font-bold uppercase tracking-wide text-gray-500 sm:mb-2">
             {course.subject}
           </span>
         )}
         {course.programType && (
-          <span className="mb-2 text-xs font-bold uppercase tracking-wide text-[#E8401C]">
+          <span className="mb-2 hidden text-xs font-bold uppercase tracking-wide text-[#E8401C] sm:block">
             {course.programType}
           </span>
         )}
         {/* Course titles are product names and stay in English in the Hindi view. */}
-        <h2 className="line-clamp-2 text-lg font-black text-gray-900" data-translate="no">
+        <h2
+          className="line-clamp-2 text-base font-black leading-snug text-gray-900 sm:text-lg sm:leading-normal"
+          data-translate="no"
+        >
           {course.title}
         </h2>
         {course.shortDescription && (
@@ -115,9 +122,9 @@ export default function CourseCard({ course }: { course: CourseRecord }) {
         {/* Footer: pinned to the bottom of the card, so the details line up across a row of
             cards and always keep a fixed gap above the button. Each detail has a fixed slot:
             age group left and duration right; level left and language right; lessons. */}
-        <div className="mt-auto pt-5">
+        <div className="mt-auto pt-2 sm:pt-5">
           {(ageGroup || duration || levelLabel || language || lessons) && (
-            <dl className="mb-4 grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-600">
+            <dl className="grid grid-cols-1 gap-y-1 text-xs text-gray-600 sm:mb-4 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-2 max-sm:[&>div:empty]:hidden">
               {(ageGroup || duration) && (
                 <>
                   <CardDetail icon={Users} label="Age group" value={ageGroup} />
@@ -138,7 +145,7 @@ export default function CourseCard({ course }: { course: CourseRecord }) {
               )}
             </dl>
           )}
-          <span className="flex min-h-11 w-full items-center justify-center rounded-full border border-[#E8401C] px-5 py-3 text-sm font-bold text-[#E8401C] transition-colors group-hover:bg-[#E8401C] group-hover:text-white">
+          <span className="hidden min-h-11 w-full items-center sm:flex justify-center rounded-full border border-[#E8401C] px-5 py-3 text-sm font-bold text-[#E8401C] transition-colors group-hover:bg-[#E8401C] group-hover:text-white">
             View Course{" "}
             <span aria-hidden="true" className="ml-2">
               →

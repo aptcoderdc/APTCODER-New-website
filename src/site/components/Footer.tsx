@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { pageHref, sectionIds, type Page, type SiteNavigate } from "../page";
-import FreeClassModal from "./freeClass/FreeClassModal";
+import { useFreeClass } from "./freeClass/FreeClassContext";
 import { useKccJoin } from "./kcc/KccContext";
 import { CODELY_PORTAL_URL } from "../data/contact";
 import { useLanguage } from "./LanguageContext";
@@ -101,7 +100,7 @@ function FooterLink({
 export default function Footer({ navigate }: FooterProps) {
   const { t } = useLanguage();
   const openKccJoin = useKccJoin();
-  const [freeClassOpen, setFreeClassOpen] = useState(false);
+  const openFreeClass = useFreeClass();
 
   return (
     <footer className="bg-gray-950 text-white">
@@ -193,7 +192,7 @@ export default function Footer({ navigate }: FooterProps) {
               {/* Same "Book a Free Class" popup as the homepage buttons (not the Courses page). */}
               <button
                 type="button"
-                onClick={() => setFreeClassOpen(true)}
+                onClick={openFreeClass}
                 aria-haspopup="dialog"
                 className="inline-block bg-[#E8401C] text-white text-sm font-semibold rounded-full px-5 py-2.5 hover:bg-[#C73516] transition-colors"
               >
@@ -209,7 +208,6 @@ export default function Footer({ navigate }: FooterProps) {
           </p>
         </div>
       </div>
-      <FreeClassModal open={freeClassOpen} onOpenChange={setFreeClassOpen} />
     </footer>
   );
 }

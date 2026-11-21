@@ -175,7 +175,7 @@ export default function CareersPage({ openings = jobOpenings }: Props) {
       </section>
 
       {/* Our values and culture */}
-      <section className="bg-white py-16 sm:py-20" aria-labelledby="careers-values-heading">
+      <section className="bg-white py-12 sm:py-20" aria-labelledby="careers-values-heading">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-10 max-w-2xl text-center">
             <div className="section-label mb-3 justify-center">OUR VALUES &amp; CULTURE</div>
@@ -213,7 +213,7 @@ export default function CareersPage({ openings = jobOpenings }: Props) {
       </section>
 
       {/* Why join: the value of the work, not employment terms (none have been confirmed). */}
-      <section className="bg-white py-16 sm:py-20" aria-labelledby="careers-benefits-heading">
+      <section className="bg-white py-12 sm:py-20" aria-labelledby="careers-benefits-heading">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-10 max-w-2xl text-center">
             <div className="section-label mb-3 justify-center">BENEFITS</div>
@@ -294,7 +294,7 @@ export default function CareersPage({ openings = jobOpenings }: Props) {
       </section>
 
       {/* How to apply */}
-      <section className="bg-white py-16 sm:py-20" aria-labelledby="careers-apply-heading">
+      <section className="bg-white py-12 sm:py-20" aria-labelledby="careers-apply-heading">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-8 rounded-3xl bg-peach p-8 sm:p-10 md:grid-cols-[1.2fr_1fr]">
             <div>

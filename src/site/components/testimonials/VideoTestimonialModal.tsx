@@ -29,7 +29,7 @@ export default function VideoTestimonialModal({
         >
           <div className="mb-3 flex w-full items-center justify-between gap-4">
             <div className="min-w-0 text-white">
-              <p className="text-[10px] font-black tracking-widest text-orange-300">
+              <p className="text-[11px] sm:text-[10px] font-black tracking-widest text-orange-300">
                 {testimonial.label}
               </p>
               <DialogPrimitive.Title className="text-sm font-bold leading-snug sm:text-base">

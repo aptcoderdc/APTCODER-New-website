@@ -156,7 +156,7 @@ export default function CnatPage(_props: Props) {
             {pillars.map(({ icon: Icon, title, text }) => (
               <li
                 key={title}
-                className="rounded-3xl border border-red-100 bg-white p-7 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)]"
+                className="rounded-3xl border border-red-100 bg-white p-5 sm:p-7 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)]"
               >
                 <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-white">
                   <Icon className="h-6 w-6" aria-hidden="true" />
@@ -170,7 +170,7 @@ export default function CnatPage(_props: Props) {
       </section>
 
       {/* How it works */}
-      <section className="bg-white py-16 sm:py-20" aria-labelledby="cnat-how-heading">
+      <section className="bg-white py-12 sm:py-20" aria-labelledby="cnat-how-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-12 max-w-3xl text-center">
             <div className="section-label mb-3">HOW IT WORKS</div>
@@ -205,7 +205,7 @@ export default function CnatPage(_props: Props) {
       </section>
 
       {/* Why participate: dark band gives the Olympiad its own competitive identity */}
-      <section className="bg-gray-950 py-16 text-white sm:py-20" aria-labelledby="cnat-why-heading">
+      <section className="bg-gray-950 py-12 text-white sm:py-20" aria-labelledby="cnat-why-heading">
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[2fr_3fr] lg:px-8">
           <div>
             <p className="mb-3 text-xs font-black tracking-widest text-[#F97316]">
@@ -230,7 +230,7 @@ export default function CnatPage(_props: Props) {
       </section>
 
       {/* Final CTA */}
-      <section className="bg-peach py-16" aria-labelledby="cnat-cta-heading">
+      <section className="bg-peach py-12 sm:py-16" aria-labelledby="cnat-cta-heading">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h2 id="cnat-cta-heading" className="mb-4 text-3xl font-black text-dark sm:text-4xl">
             Ready to Take the Challenge?

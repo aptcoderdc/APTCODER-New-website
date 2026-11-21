@@ -6,6 +6,7 @@ import {
   type VideoTestimonial,
 } from "@/site/data/testimonials";
 import VideoTestimonialModal from "./VideoTestimonialModal";
+import SwipeRow from "../SwipeRow";
 
 const cardBase =
   "group relative flex h-full min-h-[26rem] flex-col overflow-hidden rounded-3xl border border-red-100 bg-white shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)] transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-1 hover:border-red-200 hover:shadow-[0_18px_40px_-18px_rgba(17,24,39,0.35)]";
@@ -40,7 +41,7 @@ function VideoCard({
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-t from-gray-950/90 via-gray-950/25 to-gray-950/10"
         />
-        <span className="relative m-4 inline-flex self-start rounded-full bg-white/95 px-3 py-1 text-[10px] font-black tracking-widest text-primary shadow-sm">
+        <span className="relative m-4 inline-flex self-start rounded-full bg-white/95 px-3 py-1 text-[11px] sm:text-[10px] font-black tracking-widest text-primary shadow-sm">
           {testimonial.label}
         </span>
         <span
@@ -64,7 +65,7 @@ function QuoteCard({ testimonial }: { testimonial: QuoteTestimonial }) {
   const approved = testimonial.attributionApproved;
   return (
     <figure className={`${cardBase} p-6 sm:p-7`} data-testimonial-id={testimonial.id}>
-      <p className="relative mb-4 text-[10px] font-black tracking-widest text-primary">
+      <p className="relative mb-4 text-[11px] sm:text-[10px] font-black tracking-widest text-primary">
         {testimonial.label}
       </p>
       <span
@@ -111,7 +112,7 @@ export default function TestimonialsSection() {
   const [playing, setPlaying] = useState<VideoTestimonial | null>(null);
 
   return (
-    <section className="py-16 sm:py-20 bg-peach" aria-labelledby="stories-heading">
+    <section className="py-12 sm:py-20 bg-peach" aria-labelledby="stories-heading">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-9">
           <div className="section-label mb-3">VOICES FROM THE APTCODER ECOSYSTEM</div>
@@ -124,17 +125,20 @@ export default function TestimonialsSection() {
             APTCODER in different ways.
           </p>
         </div>
-        <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {testimonials.map((testimonial) => (
-            <li key={testimonial.id}>
-              {testimonial.type === "video" ? (
+        {/* A swipeable row on phones; the grid from 640px. */}
+        <SwipeRow
+          label="Testimonials"
+          gridClassName="grid gap-5 sm:grid-cols-2 xl:grid-cols-4"
+          items={testimonials.map((testimonial) => ({
+            key: testimonial.id,
+            node:
+              testimonial.type === "video" ? (
                 <VideoCard testimonial={testimonial} onPlay={setPlaying} />
               ) : (
                 <QuoteCard testimonial={testimonial} />
-              )}
-            </li>
-          ))}
-        </ul>
+              ),
+          }))}
+        />
       </div>
       <VideoTestimonialModal testimonial={playing} onClose={() => setPlaying(null)} />
     </section>

@@ -14,6 +14,7 @@ import Footer from "@/site/components/Footer";
 import WhatsAppButton from "@/site/components/WhatsAppButton";
 import SectionScroller from "@/site/components/SectionScroller";
 import { KccJoinProvider } from "@/site/components/kcc/KccContext";
+import { FreeClassProvider } from "@/site/components/freeClass/FreeClassContext";
 import { LANGUAGE_STORAGE_KEY, LanguageProvider } from "@/site/components/LanguageContext";
 import HindiTranslator from "@/site/i18n/HindiTranslator";
 import { useSiteNavigate } from "@/site/useSiteNavigate";
@@ -173,6 +174,7 @@ function SiteLayout() {
   if (pathname === pagePaths.privacy || pathname === pagePaths.terms) return <Outlet />;
   return (
     <KccJoinProvider>
+    <FreeClassProvider>
     <div className="min-h-screen bg-white">
       <SectionScroller />
       <Navbar currentPage={current} navigate={navigate} />
@@ -181,6 +183,7 @@ function SiteLayout() {
       {/* Global: appears on every route; pages must not add their own. */}
       <WhatsAppButton />
     </div>
+    </FreeClassProvider>
     </KccJoinProvider>
   );
 }

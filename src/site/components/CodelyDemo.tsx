@@ -317,7 +317,7 @@ export default function CodelyDemo() {
 
   return (
     <section
-      className="pt-16 pb-10 sm:pt-20 sm:pb-12 bg-[#FFF5F2]"
+      className="pt-12 pb-10 sm:pt-20 sm:pb-12 bg-[#FFF5F2]"
       aria-labelledby="codely-heading"
     >
       {confettiId !== null && <Confetti burstId={confettiId} />}
@@ -519,7 +519,7 @@ export default function CodelyDemo() {
                             ] as const
                           ).map(([label, value]) => (
                             <div key={label} className="rounded-xl bg-[#FFF5F2] px-2 py-2">
-                              <dt className="text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                              <dt className="text-[11px] sm:text-[10px] font-bold uppercase tracking-wide text-gray-500">
                                 {label}
                               </dt>
                               <dd className="text-xl font-black text-gray-900">{value}</dd>

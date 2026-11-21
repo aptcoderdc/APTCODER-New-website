@@ -193,7 +193,7 @@ export default function VernaticsPage({ navigate }: Props) {
       </section>
 
       {/* The experience: Code / Control / Create */}
-      <section className="bg-peach py-16 sm:py-20" aria-labelledby="experience-heading">
+      <section className="bg-peach py-12 sm:py-20" aria-labelledby="experience-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-10 max-w-3xl text-center">
             <div className="section-label mb-3">THE VERNATICS EXPERIENCE</div>
@@ -208,7 +208,7 @@ export default function VernaticsPage({ navigate }: Props) {
             {experience.map(({ icon: Icon, title, text }) => (
               <li
                 key={title}
-                className="rounded-3xl border border-red-100 bg-white p-7 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)]"
+                className="rounded-3xl border border-red-100 bg-white p-5 sm:p-7 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)]"
               >
                 <span className={`${iconTile} mb-5`}>
                   <Icon className="h-6 w-6" aria-hidden="true" />
@@ -260,7 +260,7 @@ export default function VernaticsPage({ navigate }: Props) {
       </section>
 
       {/* Vernatics Portal: the coding portal's tools and its three coding levels */}
-      <section className="bg-peach py-16 sm:py-20" aria-labelledby="portal-heading">
+      <section className="bg-peach py-12 sm:py-20" aria-labelledby="portal-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto mb-10 max-w-3xl text-center">
             <div className="section-label mb-3 justify-center">VERNATICS PORTAL</div>
@@ -344,7 +344,7 @@ export default function VernaticsPage({ navigate }: Props) {
 
       {/* How children learn: three steps (horizontal on desktop, vertical on mobile) */}
       <section
-        className="border-t border-gray-100 bg-gray-50 py-16 sm:py-20"
+        className="border-t border-gray-100 bg-gray-50 py-12 sm:py-20"
         aria-labelledby="learn-heading"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -382,7 +382,7 @@ export default function VernaticsPage({ navigate }: Props) {
       </section>
 
       {/* Final CTA (same peach band as the About page's closing section) */}
-      <section className="bg-peach py-16" aria-labelledby="vernatics-cta-heading">
+      <section className="bg-peach py-12 sm:py-16" aria-labelledby="vernatics-cta-heading">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
           <h2 id="vernatics-cta-heading" className="mb-4 text-3xl font-black text-dark sm:text-4xl">
             Ready to Bring Coding to Life?

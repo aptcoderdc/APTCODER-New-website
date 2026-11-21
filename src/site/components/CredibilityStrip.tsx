@@ -40,7 +40,7 @@ export default function CredibilityStrip() {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6 lg:gap-8">
           <h2
             id="credibility-strip-heading"
-            className="shrink-0 text-[10px] sm:text-xs font-bold tracking-widest text-gray-500"
+            className="shrink-0 text-[11px] sm:text-xs font-bold tracking-widest text-gray-500"
           >
             OUR ECOSYSTEM PARTNERS
           </h2>

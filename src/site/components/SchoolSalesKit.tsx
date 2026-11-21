@@ -1,7 +1,15 @@
 import { useState, type FormEvent } from 'react'
+import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { sendToSheet } from '../api/sheetForms'
 import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_HREF } from '../data/contact'
 import { FIELD_TEXT } from './formFieldStyles'
+import {
+  POPUP_ACTIONS,
+  POPUP_CLOSE,
+  POPUP_CLOSE_WRAP,
+  POPUP_CONTENT,
+  POPUP_OVERLAY,
+} from './popupStyles'
 
 interface Props {
   compact?: boolean
@@ -61,36 +69,33 @@ export default function SchoolSalesKit({ compact = false }: Props) {
         Get School Sales Kit
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-[70] bg-gray-950/60 backdrop-blur-sm p-4 flex items-center justify-center"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="school-kit-title"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) close()
-          }}
-        >
-          {/* Scrolls inside itself when taller than the screen (short phones, keyboard open). */}
-          <div className="w-full max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain rounded-3xl bg-white shadow-2xl">
-            <div className="bg-[#FFF5F2] px-6 sm:px-8 py-6 flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-bold text-[#E8401C] uppercase tracking-widest mb-2">
-                  FOR SCHOOL LEADERS
-                </p>
-                <h2 id="school-kit-title" className="text-2xl font-black text-gray-900">
-                  Get the School Sales Kit
-                </h2>
-              </div>
-              <button
-                onClick={close}
-                className="w-9 h-9 rounded-full bg-white text-gray-500 hover:text-gray-900"
+      <DialogPrimitive.Root
+        open={open}
+        onOpenChange={(next) => (next ? setOpen(true) : close())}
+      >
+        <DialogPrimitive.Portal>
+          <DialogPrimitive.Overlay className={POPUP_OVERLAY} />
+          <DialogPrimitive.Content
+            className={`${POPUP_CONTENT} sm:max-w-lg`}
+            aria-describedby={undefined}
+          >
+            <div className={POPUP_CLOSE_WRAP}>
+              <DialogPrimitive.Close
+                className={POPUP_CLOSE}
                 aria-label="Close"
+                disabled={status === 'sending'}
               >
-                ×
-              </button>
+                <span aria-hidden="true" className="text-lg leading-none">×</span>
+              </DialogPrimitive.Close>
             </div>
-
+            <div className="bg-[#FFF5F2] px-6 py-6 pr-16 sm:px-8 sm:pr-16">
+              <p className="text-xs font-bold text-[#E8401C] uppercase tracking-widest mb-2">
+                FOR SCHOOL LEADERS
+              </p>
+              <DialogPrimitive.Title className="text-2xl font-black text-gray-900">
+                Get the School Sales Kit
+              </DialogPrimitive.Title>
+            </div>
             {submitted ? (
               <div className="p-8" role="status">
                 <div className="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center font-black mb-4">
@@ -187,22 +192,24 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                     .
                   </p>
                 )}
-                <button
-                  type="submit"
-                  disabled={status === 'sending'}
-                  aria-busy={status === 'sending'}
-                  className="w-full rounded-full bg-[#E8401C] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#C73516] transition-colors disabled:opacity-70 disabled:cursor-wait"
-                >
-                  {status === 'sending' ? 'Sending…' : 'Email me the sales kit →'}
-                </button>
+                <div className={`${POPUP_ACTIONS} -mx-6`}>
+                  <button
+                    type="submit"
+                    disabled={status === 'sending'}
+                    aria-busy={status === 'sending'}
+                    className="w-full rounded-full bg-[#E8401C] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#C73516] transition-colors disabled:opacity-70 disabled:cursor-wait"
+                  >
+                    {status === 'sending' ? 'Sending…' : 'Email me the sales kit →'}
+                  </button>
+                </div>
                 <p className="text-center text-xs text-gray-400">
                   Your details will only be used to respond to this request.
                 </p>
               </form>
             )}
-          </div>
-        </div>
-      )}
+          </DialogPrimitive.Content>
+        </DialogPrimitive.Portal>
+      </DialogPrimitive.Root>
     </>
   )
 }

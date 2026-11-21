@@ -370,6 +370,13 @@ html {
   color: #E8401C;
 }
 
+/* Phones: one step larger so the small capitals stay easy to read. */
+@media (max-width: 639px) {
+  .section-label {
+    font-size: 12px;
+  }
+}
+
 .section-label::before,
 .section-label::after {
   content: '';
@@ -486,6 +493,28 @@ html {
 @media (hover: none) {
   .whatsapp-fab-tooltip {
     display: none;
+  }
+}
+
+/* Phones and tablets: out of the way while scrolling down (WhatsAppButton.tsx sets
+   data-scroll-hidden) and while typing in a form on the page. Keyboard focus always shows it. */
+@media (max-width: 1023px) {
+  .whatsapp-fab[data-scroll-hidden],
+  body:has(:is(input, select, textarea):focus) .whatsapp-fab {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(24px);
+  }
+  .whatsapp-fab:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+}
+
+@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+  .whatsapp-fab {
+    transition: transform 0.25s ease, opacity 0.2s ease, bottom 0.2s ease, background-color 0.2s ease;
   }
 }
 
