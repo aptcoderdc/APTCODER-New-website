@@ -20,7 +20,11 @@ something here conflicts with a new request.
 - Live site: https://newweb.aptcoder.com/, served by GitHub Pages from this repo
   (aptcoderdc/APTCODER-New-website). Every push to `main` runs `.github/workflows/deploy-pages.yml`.
 - The custom domain needs `public/CNAME` and the root-base handling in `vite.config.ts`
-  (`PAGES_BASE_PATH` empty means root-relative assets).
+  (`PAGES_BASE_PATH` empty means base "/", so every asset and link is an absolute `/...` path;
+  relative `./` paths broke the logo on pages opened directly). The 404.html app shell is
+  rendered from `/?spa-shell` so it does not take the home page's place in the prerender.
+  To test a Pages build locally: `node scripts/serve-pages-build.mjs` (serves `dist/client`
+  like GitHub Pages).
 - This repo started as a copy of KH11120/archive-unpack-and-play, which is still connected to
   Lovable. Lovable edits do not reach this repo, so the Lovable block above applies only if Lovable
   is connected here later.

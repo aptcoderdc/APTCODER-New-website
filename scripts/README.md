@@ -76,3 +76,16 @@ installed):
 
 Sideways scrolling, or text under 11px below 1024px, is a failure. Small touch targets are listed as warnings;
 links inside sentences and the footer's text links are not counted.
+
+# Testing the GitHub Pages build locally
+
+`scripts/serve-pages-build.mjs` serves `dist/client` the way GitHub Pages does: `/school`
+redirects to `/school/`, folders serve their `index.html`, and anything else gets `404.html`.
+
+```sh
+GITHUB_PAGES=true PAGES_BASE_PATH="" npm run build:pages
+node scripts/serve-pages-build.mjs
+```
+
+Then open http://localhost:8090 and visit pages directly (not only by clicking through), since
+that is how a broken path shows up.

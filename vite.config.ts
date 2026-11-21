@@ -18,10 +18,15 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 const githubPages = process.env["GITHUB_PAGES"] === "true";
 const rawBase = process.env["PAGES_BASE_PATH"] ?? "/archive-unpack-and-play/";
 // GitHub Pages reports "/<repo>" for a project site and "" once a custom domain is bound.
-// A base of "/" makes the prerender skip the home page (no index.html for "/"), so the root
-// is expressed as "" — Vite then emits root-relative asset paths, which is what a custom
-// domain needs. Every other value keeps its trailing slash.
-const pagesBase = rawBase === "" || rawBase === "/" ? "" : rawBase.replace(/\/?$/, "/");
+// The custom domain serves the site from the root, so "" means "/": every asset and link is
+// then an absolute path (/images/..., /assets/...) that works on every page. (An empty base
+// made them relative, "./images/...", which breaks on /school/ and other pages opened
+// directly: the header logo and the first stylesheet failed to load there.) Every other value
+// keeps its trailing slash.
+const pagesBase = rawBase === "" || rawBase === "/" ? "/" : rawBase.replace(/\/?$/, "/");
+
+/** Address the 404.html app shell is rendered from (anything but "/", see `spa` below). */
+const SPA_SHELL_PATH = "/?spa-shell";
 
 /** Every page of the site, so the pre-render does not depend on finding links. */
 function staticPages(): { path: string }[] {
@@ -70,10 +75,18 @@ export default defineConfig({
             crawlLinks: true,
             failOnError: true,
             // A query string or #section is the same page file; filters apply in the browser.
-            filter: (page: { path: string }) => !/[?#]/.test(page.path),
+            // The app shell below is the one exception: it is rendered from its own address.
+            filter: (page: { path: string }) =>
+              page.path === SPA_SHELL_PATH || !/[?#]/.test(page.path),
           },
-          // App shell for any URL without its own page (GitHub Pages serves 404.html).
-          spa: { enabled: true, prerender: { outputPath: "/404", crawlLinks: false } },
+          // App shell for any URL without its own page (GitHub Pages serves 404.html). It is
+          // rendered from its own address: at "/" it took the home page's place in the
+          // prerender, so the home page got no index.html of its own.
+          spa: {
+            enabled: true,
+            maskPath: SPA_SHELL_PATH,
+            prerender: { outputPath: "/404", crawlLinks: false },
+          },
         }
       : {}),
   },

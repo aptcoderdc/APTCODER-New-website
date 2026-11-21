@@ -15,10 +15,13 @@ export default function AptcoderLogo({
   return (
     <img
       src={aptcoderLogo.src}
+      srcSet={aptcoderLogo.srcSet}
+      sizes={aptcoderLogo.sizes}
       alt={aptcoderLogo.alt}
       width={aptcoderLogo.width}
       height={aptcoderLogo.height}
       loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : undefined}
       decoding="async"
       className={`w-auto max-w-none object-contain ${className}`}
     />
