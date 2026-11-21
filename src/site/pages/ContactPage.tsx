@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, Mail, MessageCircle, Phone } from 'lucide-react'
 import { sendToSheet } from '../api/sheetForms'
 import { pageHref, type Page } from '../page'
 import { useLanguage } from '../components/LanguageContext'
@@ -12,6 +12,7 @@ import {
   OFFICE_MAPS_URL,
 } from '../data/contact'
 import { FIELD_TEXT } from '../components/formFieldStyles'
+import { WHATSAPP_URL } from '../components/WhatsAppButton'
 
 interface Props {
   navigate: (page: Page) => void
@@ -53,8 +54,8 @@ export default function ContactPage(_props: Props) {
     <div>
       {/* Hero */}
       <section className="relative overflow-hidden bg-white">
-        <div className="absolute right-0 top-0 w-1/2 h-full bg-[#FFF5F2] rounded-l-[80px] -z-0" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="absolute right-0 top-0 w-1/2 h-full bg-[#FFF5F2] rounded-l-[80px] -z-0 max-sm:hidden" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <div className="section-label mb-4">{t('CONTACT US', 'संपर्क करें')}</div>
             {/* At most two lines on desktop; "Together." is highlighted. */}
@@ -69,9 +70,29 @@ export default function ContactPage(_props: Props) {
                 'हमारे कोर्स, स्कूल कार्यक्रम, साझेदारी या आयोजनों के बारे में सवाल हैं? हम मदद के लिए यहाँ हैं। हमारी टीम से संपर्क करें।',
               )}
             </p>
+            {/* Phones: the quickest ways to reach us come first, before the form. */}
+            <ul className="mt-6 grid grid-cols-3 gap-2 sm:hidden" aria-label="Quick contact">
+              {[
+                { label: t('Call', 'कॉल करें'), href: CONTACT_PHONE_HREF, Icon: Phone, external: false },
+                { label: 'WhatsApp', href: WHATSAPP_URL, Icon: MessageCircle, external: true },
+                { label: t('Email', 'ईमेल'), href: `mailto:${CONTACT_EMAIL}`, Icon: Mail, external: false },
+              ].map(({ label, href, Icon, external }) => (
+                <li key={href}>
+                  <a
+                    href={href}
+                    {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                    className="flex min-h-16 flex-col items-center justify-center gap-1.5 rounded-2xl border border-gray-200 bg-white text-sm font-bold text-gray-800 active:bg-[#FFF5F2]"
+                  >
+                    <Icon className="h-5 w-5 text-[#E8401C]" aria-hidden="true" />
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#FFE8E0]">
+          {/* Decorative photo: from 640px only. */}
+          <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#FFE8E0] max-sm:hidden">
             <img
               src="https://images.unsplash.com/photo-1568585219057-9206080e6c74?w=700&h=500&fit=crop&auto=format"
               alt="Friendly student waving, ready to connect"

@@ -60,6 +60,7 @@ function FilterGroup({
   filters,
   courses,
   onChange,
+  chips = false,
 }: {
   title: string;
   filterKey: FilterKey;
@@ -67,6 +68,7 @@ function FilterGroup({
   filters: CatalogueFilters;
   courses: readonly CourseRecord[];
   onChange: (key: FilterKey, value: FilterValue, checked: boolean) => void;
+  chips?: boolean;
 }) {
   const selected = filters[filterKey] as FilterValue[];
   return (
@@ -77,11 +79,38 @@ function FilterGroup({
           <span aria-hidden="true">−</span>
         </span>
       </summary>
-      <div className="mt-3 space-y-2">
+      {/* Chips: a compact grid of tappable boxes (used for grades in the phone filter sheet). */}
+      <div className={chips ? "mt-3 grid grid-cols-4 gap-2" : "mt-3 space-y-2"}>
         {options.map((option) => {
           const count = getCatalogueOptionCount(courses, filters, filterKey, option);
           const label = filterOptionLabel(filterKey, option);
-          const id = `${filterKey}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+          const id = `${filterKey}-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}${chips ? "-chip" : ""}`;
+          const isSelected = selected.includes(option);
+          if (chips)
+            return (
+              <label
+                key={label}
+                htmlFor={id}
+                className={`flex min-h-12 flex-col items-center justify-center rounded-xl border text-sm font-bold transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[#E8401C] ${
+                  isSelected
+                    ? "border-[#E8401C] bg-[#FFF5F2] text-[#E8401C]"
+                    : count
+                      ? "cursor-pointer border-gray-200 text-gray-800"
+                      : "cursor-not-allowed border-gray-100 text-gray-300"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  id={id}
+                  className="sr-only"
+                  checked={isSelected}
+                  disabled={count === 0 && !isSelected}
+                  onChange={(event) => onChange(filterKey, option, event.target.checked)}
+                />
+                <span>{label}</span>
+                <span className="text-[11px] font-medium tabular-nums opacity-70">{count}</span>
+              </label>
+            );
           return (
             <label
               key={label}
@@ -109,11 +138,14 @@ export function FilterPanel({
   courses = catalogueCourses,
   onChange,
   onClear,
+  gradeChips = false,
 }: {
   filters: CatalogueFilters;
   courses?: readonly CourseRecord[];
   onChange: Props["onFiltersChange"];
   onClear: () => void;
+  /** Show grades as a grid of chips (the phone filter sheet) instead of a checkbox list. */
+  gradeChips?: boolean;
 }) {
   const updateFilter = (key: FilterKey, value: FilterValue, checked: boolean) => {
     const current = filters[key] as FilterValue[];
@@ -181,6 +213,7 @@ export function FilterPanel({
               filters={filters}
               courses={courses}
               onChange={updateFilter}
+              chips={gradeChips && key === "grades"}
             />
           ),
       )}
@@ -255,15 +288,15 @@ export default function CoursesPage({ filters, onFiltersChange, navigate }: Prop
   return (
     <main>
       <section className="bg-[#FFF5F2]">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_minmax(18rem,28rem)] lg:items-end lg:px-8 lg:py-16">
+        <div className="mx-auto grid max-w-7xl gap-5 px-4 py-8 sm:gap-8 sm:px-6 sm:py-12 lg:grid-cols-[1fr_minmax(18rem,28rem)] lg:items-end lg:px-8 lg:py-16">
           <div>
             <p className="section-label mb-4">OUR COURSES</p>
-            <h1 className="text-4xl font-black leading-tight text-gray-900 sm:text-5xl">
+            <h1 className="text-[2rem] font-black leading-tight text-gray-900 sm:text-5xl">
               {selectedSubjects.length === 1
                 ? `${selectedSubjects[0]} Courses`
                 : "Explore Our Courses"}
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-gray-600">
+            <p className="mt-3 max-w-2xl text-base leading-relaxed text-gray-600 sm:mt-4">
               Explore technology courses for your interests and learning needs.
             </p>
           </div>
@@ -290,11 +323,15 @@ export default function CoursesPage({ filters, onFiltersChange, navigate }: Prop
         </div>
       </section>
 
-      <nav aria-label="Course subjects" className="border-b border-gray-100 bg-white">
+      {/* Phones: the subject bar stays under the site header while the results scroll. */}
+      <nav
+        aria-label="Course subjects"
+        className="border-b border-gray-100 bg-white max-sm:sticky max-sm:top-16 max-sm:z-30 max-sm:shadow-sm"
+      >
         {/* Multi-select: each chip toggles its subject; filters, search and sort are kept. The
             row scrolls sideways when the subjects do not fit; "relative" keeps the screen-reader
             labels inside it, so the page itself never scrolls sideways. */}
-        <div className="relative mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-4 sm:px-6 lg:px-8">
+        <div className="relative mx-auto flex max-w-7xl gap-2 overflow-x-auto px-4 py-2.5 sm:px-6 sm:py-4 lg:px-8">
           {/* All Courses resets the catalogue: no subjects, search or sidebar filters. */}
           <Link
             to="/courses"
@@ -351,7 +388,12 @@ export default function CoursesPage({ filters, onFiltersChange, navigate }: Prop
                       Select options, then apply to the catalogue.
                     </SheetDescription>
                   </SheetHeader>
-                  <FilterPanel filters={filters} onChange={updateFilters} onClear={clearFilters} />
+                  <FilterPanel
+                    filters={filters}
+                    onChange={updateFilters}
+                    onClear={clearFilters}
+                    gradeChips
+                  />
                 </div>
                 <SheetFooter className="shrink-0 border-t border-gray-100 bg-white px-6 py-4">
                   <button

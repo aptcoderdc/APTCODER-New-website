@@ -139,3 +139,23 @@ describe("homepage Vernatics panel", () => {
     expect(home).not.toContain("Watch it in action");
   });
 });
+
+describe("Vernatics page on phones", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("folds the portal features after four, with a button that shows the rest", async () => {
+    vi.stubGlobal("IntersectionObserver", IdleObserver);
+    const rootRoute = createRootRoute({ component: () => <VernaticsPage navigate={vi.fn()} /> });
+    const router = createRouter({
+      routeTree: rootRoute,
+      history: createMemoryHistory({ initialEntries: ["/vernatics"] }),
+    });
+    render(<RouterProvider router={router} />);
+    const list = await screen.findByRole("list", { name: "Portal features" });
+    const folded = () => [...list.children].filter((li) => li.className.includes("max-sm:hidden"));
+    expect(folded()).toHaveLength(list.children.length - 4);
+    fireEvent.click(screen.getByRole("button", { name: /Show all \d+ features/ }));
+    expect(folded()).toHaveLength(0);
+    expect(screen.queryByRole("button", { name: /Show all \d+ features/ })).toBeNull();
+  });
+});

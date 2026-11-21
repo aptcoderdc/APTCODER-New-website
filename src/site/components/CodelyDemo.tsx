@@ -619,7 +619,8 @@ export default function CodelyDemo() {
             <p className="mb-3 text-xs font-bold uppercase tracking-widest text-gray-500">
               1. Add instructions
             </p>
-            <div className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {/* One row of three on every screen; on phones the labels are smaller and may wrap. */}
+            <div className="mb-6 grid grid-cols-3 gap-2">
               {(Object.keys(COMMANDS) as Command[]).map((command) => {
                 const { label, Icon, button, iconBg } = COMMANDS[command];
                 return (
@@ -628,7 +629,7 @@ export default function CodelyDemo() {
                     type="button"
                     onClick={() => addCommand(command)}
                     disabled={busy || program.length >= MAX_INSTRUCTIONS}
-                    className={`flex items-center gap-2.5 whitespace-nowrap rounded-xl border-2 px-3 py-2.5 text-sm font-bold transition-all sm:flex-col sm:gap-1.5 sm:py-3 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8401C] focus-visible:ring-offset-2 ${button}`}
+                    className={`flex min-h-16 flex-col items-center justify-center gap-1.5 rounded-xl border-2 px-1.5 py-2.5 text-center text-xs leading-tight font-bold transition-all sm:whitespace-nowrap sm:px-3 sm:py-3 sm:text-sm active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8401C] focus-visible:ring-offset-2 ${button}`}
                   >
                     <span
                       className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${iconBg}`}

@@ -167,6 +167,8 @@ const possibilities = [
 ]
 
 const faqs = siteWideFaqs
+/** Phones show this many FAQs, then a "Show all" button; wider screens show every one. */
+const PHONE_FAQS = 5
 
 function LineIcon({
   path,
@@ -196,6 +198,9 @@ export default function HomePage({ navigate }: Props) {
   const [activeProject, setActiveProject] = useState(0)
   const [showMorePossibilities, setShowMorePossibilities] = useState(false)
   const [freeClassOpen, setFreeClassOpen] = useState(false)
+  // Phones only: extra detail that is folded away to keep the page short (always shown from 640px).
+  const [showProjectDetails, setShowProjectDetails] = useState(false)
+  const [showAllFaqs, setShowAllFaqs] = useState(false)
   const openKccJoin = useKccJoin()
   const { t } = useLanguage()
   const selectedProject = projects[activeProject]!
@@ -210,13 +215,13 @@ export default function HomePage({ navigate }: Props) {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 md:pt-10 md:pb-14 lg:py-12">
           <div className="grid w-full grid-cols-1 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] xl:grid-cols-[minmax(0,1fr)_28rem] gap-8 lg:gap-14 items-center">
             <div>
-              <div className="section-label mb-5">
+              <div className="section-label mb-4 sm:mb-5">
                 {t(
                   "CHILDREN · TECHNOLOGY · BRIGHTER TOMORROWS",
                   "बच्चे · तकनीक · उज्ज्वल भविष्य",
                 )}
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-dark mb-6">
+              <h1 className="text-[2rem] sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-dark mb-5 sm:mb-6">
                 {t("From Curious Minds", "जिज्ञासु मन से")}
                 <br />
                 <span className="text-primary">
@@ -224,15 +229,15 @@ export default function HomePage({ navigate }: Props) {
                 </span>
               </h1>
               {/* Positioning line: one line from 1280px wide (the box grows to fit); wraps on smaller screens. */}
-              <div className="relative mb-5 max-w-xl overflow-hidden rounded-r-2xl border-l-4 border-primary bg-peach px-5 py-4 xl:w-fit xl:max-w-none">
-                <p className="text-xl sm:text-2xl xl:text-[1.375rem] xl:tracking-[-0.025em] xl:whitespace-nowrap font-black leading-snug text-primary">
+              <div className="relative mb-5 max-w-xl overflow-hidden rounded-r-2xl border-l-4 border-primary bg-peach px-4 py-3 sm:px-5 sm:py-4 xl:w-fit xl:max-w-none">
+                <p className="text-lg sm:text-2xl xl:text-[1.375rem] xl:tracking-[-0.025em] xl:whitespace-nowrap font-black leading-snug text-primary">
                   {t(
                     "AI, Robotics & Coding — Made Understandable for Every Child.",
                     "एआई, रोबोटिक्स और कोडिंग — हर बच्चे के लिए आसान समझ में।",
                   )}
                 </p>
               </div>
-              <p className="text-base leading-relaxed text-gray-700 max-w-xl mb-8">
+              <p className="text-base leading-relaxed text-gray-700 max-w-xl mb-6 sm:mb-8">
                 {t(
                   "Children explore AI, robotics and coding through a language they understand best — so they can focus on understanding ideas, solving problems and creating with technology.",
                   "बच्चे एआई, रोबोटिक्स और कोडिंग उस भाषा में सीखते हैं जिसे वे सबसे अच्छी तरह समझते हैं — ताकि वे विचारों को समझने, समस्याओं को हल करने और तकनीक के साथ रचना करने पर ध्यान दे सकें।",
@@ -242,7 +247,7 @@ export default function HomePage({ navigate }: Props) {
                 <button
                   type="button"
                   onClick={() => setFreeClassOpen(true)}
-                  className="rounded-full bg-primary px-7 py-3.5 text-sm font-bold text-white hover:bg-primary-dark transition-colors"
+                  className="rounded-full bg-primary px-7 py-3.5 text-sm font-bold text-white hover:bg-primary-dark transition-colors max-sm:w-full max-sm:py-4"
                 >
                   {t("Book a Free Class", "मुफ़्त क्लास बुक करें")}{" "}
                   <span aria-hidden="true">→</span>
@@ -346,7 +351,7 @@ export default function HomePage({ navigate }: Props) {
           </div>
 
           {!showMorePossibilities ? (
-            <div className="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6">
+            <div className="rounded-3xl border border-gray-200 bg-white p-5 sm:p-6 max-sm:border-0 max-sm:bg-transparent max-sm:p-0">
               <div className="grid md:grid-cols-2 lg:grid-cols-[0.95fr_1.05fr_1.35fr] gap-5 lg:gap-6 items-stretch">
                 <div className={`rounded-2xl p-5 ${selectedProject.tone}`}>
                   <LineIcon
@@ -374,10 +379,10 @@ export default function HomePage({ navigate }: Props) {
                       </span>
                     ))}
                   </div>
-                  <p className="mt-5 text-xs font-black tracking-widest text-gray-400 mb-3">
+                  <p className={`mt-5 text-xs font-black tracking-widest text-gray-400 mb-3 ${showProjectDetails ? "" : "max-sm:hidden"}`}>
                     EXAMPLE PROJECTS
                   </p>
-                  <ul className="grid gap-2">
+                  <ul className={`grid gap-2 ${showProjectDetails ? "" : "max-sm:hidden"}`}>
                     {selectedProject.examples.map((example) => (
                       <li
                         key={example}
@@ -390,10 +395,10 @@ export default function HomePage({ navigate }: Props) {
                   </ul>
                 </div>
                 <div className="rounded-2xl border border-red-100 bg-peach p-5 md:col-span-2 lg:col-span-1">
-                  <p className="text-xs font-black tracking-widest text-primary mb-3">
+                  <p className={`text-xs font-black tracking-widest text-primary mb-3 ${showProjectDetails ? "" : "max-sm:hidden"}`}>
                     RELEVANT APTCODER LEARNING
                   </p>
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-3">
+                  <div className={`grid sm:grid-cols-2 lg:grid-cols-1 gap-3 ${showProjectDetails ? "" : "max-sm:hidden"}`}>
                     {selectedProject.learning.map((course) => (
                       <div
                         key={course.title}
@@ -410,12 +415,21 @@ export default function HomePage({ navigate }: Props) {
                   </div>
                   <CourseSubjectLink
                     subjects={homeCourseSubjects.projects[selectedProject.title] ?? []}
-                    className="mt-4 inline-block text-sm font-black text-primary hover:text-primary-dark"
+                    className={`inline-block text-sm font-black text-primary hover:text-primary-dark ${showProjectDetails ? "mt-4" : "sm:mt-4"}`}
                   >
                     Explore Courses →
                   </CourseSubjectLink>
                 </div>
               </div>
+              {/* Phones: example projects and course ideas are folded away until asked for. */}
+              <button
+                type="button"
+                onClick={() => setShowProjectDetails((shown) => !shown)}
+                aria-expanded={showProjectDetails}
+                className="mt-3 flex min-h-11 w-full items-center justify-center rounded-full border border-gray-200 bg-white text-sm font-bold text-gray-700 sm:hidden"
+              >
+                {showProjectDetails ? "Show less −" : "See example projects & courses +"}
+              </button>
             </div>
           ) : (
             <div
@@ -497,19 +511,20 @@ export default function HomePage({ navigate }: Props) {
 
           <article className="mb-5 overflow-hidden rounded-3xl bg-white">
             <div className="grid lg:grid-cols-2 items-stretch">
-              <div className="p-6 sm:p-8 lg:p-10">
+              <div className="p-5 sm:p-8 lg:p-10">
                 <p className="text-xs font-black tracking-widest text-primary mb-2">
                   MEET VERNATICS
                 </p>
                 <h3 className="text-2xl sm:text-3xl font-black text-dark mb-3">
                   Code a Robot. Watch It Respond.
                 </h3>
-                <p className="text-sm sm:text-base leading-relaxed text-gray-600 mb-7">
+                <p className="text-sm sm:text-base leading-relaxed text-gray-600 mb-5 sm:mb-7">
                   Program a real robot, control it wirelessly from anywhere,
                   work with sensors and experiment in the language you
                   understand best.
                 </p>
-                <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-10 mb-7">
+                {/* Phones: the four-word summary is left to the Vernatics page, to keep this short. */}
+                <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:gap-x-10 mb-7 max-sm:hidden">
                   {[
                     ["CODE", "Give it instructions."],
                     ["CONTROL", "Operate it from anywhere."],
@@ -526,7 +541,7 @@ export default function HomePage({ navigate }: Props) {
                     </div>
                   ))}
                 </dl>
-                <p className="mb-6 inline-flex rounded-full bg-peach px-3 py-2 text-xs font-black text-primary">
+                <p className="mb-6 inline-flex rounded-full bg-peach px-3 py-2 text-xs font-black text-primary max-sm:hidden">
                   Learn Robotics in Your Language
                 </p>
                 <div className="flex flex-wrap items-center gap-4">
@@ -551,7 +566,7 @@ export default function HomePage({ navigate }: Props) {
           </article>
 
           {/* Primary offering: full-width Courses & Learning Paths */}
-          <article className="mb-5 rounded-3xl bg-white p-6 sm:p-8 lg:p-10">
+          <article className="mb-5 rounded-3xl bg-white p-5 sm:p-8 lg:p-10">
             <div className="grid gap-7 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center lg:gap-12">
               <div>
                 <p className="text-xs font-black tracking-widest text-primary mb-2">
@@ -573,7 +588,8 @@ export default function HomePage({ navigate }: Props) {
                   Browse Courses →
                 </button>
               </div>
-              <ul className="grid gap-3 sm:grid-cols-3" aria-label="Learning models">
+              {/* Phones: the three learning models are named in the text above; the cards show from 640px. */}
+              <ul className="grid gap-3 sm:grid-cols-3 max-sm:hidden" aria-label="Learning models">
                 {[
                   {
                     name: "LIVE",
@@ -614,19 +630,19 @@ export default function HomePage({ navigate }: Props) {
 
           {/* Two complementary parts of the ecosystem, equal width */}
           <div className="grid gap-5 md:grid-cols-2 items-stretch">
-            <article className="flex flex-col rounded-3xl border border-red-100 bg-white p-6 sm:p-8">
+            <article className="flex flex-col rounded-3xl border border-red-100 bg-white p-5 sm:p-8">
               <div className="flex min-h-8 items-center mb-2">
                 <p className="text-xs font-black tracking-widest text-primary">C-NAT</p>
               </div>
               <h3 className="text-2xl sm:text-3xl md:min-h-[2.5em] md:text-2xl lg:min-h-0 lg:text-[1.7rem] xl:text-3xl font-black leading-tight text-dark text-balance mb-3">
                 India’s Coding Olympiad
               </h3>
-              <p className="text-sm sm:text-base leading-relaxed text-gray-600 mb-5">
+              <p className="text-sm sm:text-base leading-relaxed text-gray-600 mb-2 sm:mb-5">
                 A national coding challenge where young learners test their
                 skills, compete in coding tracks and earn recognition for what
                 they can do.
               </p>
-              <p className="text-xs font-black tracking-wide text-gray-500">
+              <p className="text-xs font-black tracking-wide text-gray-500 max-sm:hidden">
                 CHOOSE YOUR TRACK <span className="text-primary">→</span> TAKE
                 THE CHALLENGE <span className="text-primary">→</span> EARN
                 RECOGNITION
@@ -642,7 +658,7 @@ export default function HomePage({ navigate }: Props) {
               </div>
             </article>
 
-            <article className="flex flex-col rounded-3xl border border-red-100 bg-white p-6 sm:p-8">
+            <article className="flex flex-col rounded-3xl border border-red-100 bg-white p-5 sm:p-8">
               <div className="flex min-h-8 flex-wrap items-center justify-between gap-x-4 gap-y-2 mb-2">
                 <p className="text-xs font-black tracking-widest text-primary">KCC</p>
                 <p className="inline-flex rounded-full bg-peach px-3 py-1.5 text-xs font-bold text-primary">
@@ -652,11 +668,11 @@ export default function HomePage({ navigate }: Props) {
               <h3 className="text-2xl sm:text-3xl md:min-h-[2.5em] md:text-2xl lg:min-h-0 lg:text-[1.7rem] xl:text-3xl font-black leading-tight text-dark text-balance mb-3">
                 The Kids Coding Community
               </h3>
-              <p className="text-sm sm:text-base leading-relaxed text-gray-600 mb-5">
+              <p className="text-sm sm:text-base leading-relaxed text-gray-600 mb-2 sm:mb-5">
                 Keep learning long after the class ends, in a free community
                 for continued learning, building, sharing and problem-solving.
               </p>
-              <p className="text-xs font-black tracking-wide text-gray-500">
+              <p className="text-xs font-black tracking-wide text-gray-500 max-sm:hidden">
                 LEARN <span className="text-primary">→</span> BUILD{" "}
                 <span className="text-primary">→</span> SHARE{" "}
                 <span className="text-primary">→</span> SOLVE{" "}
@@ -699,7 +715,10 @@ export default function HomePage({ navigate }: Props) {
           </div>
           <div>
             {faqs.map((faq, index) => (
-              <div key={faq.q} className="faq-item py-5">
+              <div
+                key={faq.q}
+                className={`faq-item py-5 ${index >= PHONE_FAQS && !showAllFaqs ? "max-sm:hidden" : ""}`}
+              >
                 <button
                   type="button"
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
@@ -723,6 +742,15 @@ export default function HomePage({ navigate }: Props) {
               </div>
             ))}
           </div>
+          {faqs.length > PHONE_FAQS && !showAllFaqs && (
+            <button
+              type="button"
+              onClick={() => setShowAllFaqs(true)}
+              className="mt-4 flex min-h-11 w-full items-center justify-center rounded-full border border-gray-200 text-sm font-bold text-gray-700 sm:hidden"
+            >
+              {`Show all ${faqs.length} questions +`}
+            </button>
+          )}
         </div>
       </section>
 

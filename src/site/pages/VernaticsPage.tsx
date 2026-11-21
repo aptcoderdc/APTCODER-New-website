@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   Code2,
   Download,
@@ -143,13 +143,17 @@ const codingLevels = [
 const iconTile =
   "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-peach text-primary";
 
+/** Phones show this many portal features, then a "Show all" button. */
+const PHONE_PORTAL_FEATURES = 4;
+
 export default function VernaticsPage({ navigate }: Props) {
+  const [showAllFeatures, setShowAllFeatures] = useState(false);
   return (
     <div>
       {/* Hero: same split layout as the School and Contact heroes. */}
       <section className="relative overflow-hidden bg-white" aria-labelledby="vernatics-heading">
         <div className="absolute right-0 top-0 hidden h-full w-1/2 rounded-l-[80px] bg-peach lg:block" />
-        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:px-8">
+        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-2 lg:gap-12 lg:px-8">
           <div>
             <div className="section-label mb-4">MEET VERNATICS</div>
             <h1
@@ -163,17 +167,17 @@ export default function VernaticsPage({ navigate }: Props) {
               programming by controlling a real robot, experimenting with sensors and watching their
               ideas turn into action.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 max-sm:flex-col">
               {/* Opens the catalogue with the Vernatics subject selected. */}
               <CourseSubjectLink
                 subjects={[VERNATICS_SUBJECT]}
-                className="flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-semibold text-white transition-colors hover:bg-primary-dark"
+                className="flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 font-semibold text-white transition-colors hover:bg-primary-dark"
               >
                 Start Learning →
               </CourseSubjectLink>
               <a
                 href={`#${FEATURES_ID}`}
-                className="rounded-full border-2 border-gray-200 px-7 py-3.5 font-semibold text-gray-700 transition-colors hover:border-primary"
+                className="rounded-full border-2 border-gray-200 px-7 py-3.5 text-center font-semibold text-gray-700 transition-colors hover:border-primary"
               >
                 Explore Its Features
               </a>
@@ -204,17 +208,21 @@ export default function VernaticsPage({ navigate }: Props) {
               Children don’t just learn what code does. They discover it by making things happen.
             </p>
           </div>
-          <ul className="grid gap-5 md:grid-cols-3">
+          <ul className="grid gap-3 sm:gap-5 md:grid-cols-3">
             {experience.map(({ icon: Icon, title, text }) => (
               <li
                 key={title}
-                className="rounded-3xl border border-red-100 bg-white p-5 sm:p-7 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)]"
+                className="rounded-3xl border border-red-100 bg-white p-5 sm:p-7 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)] max-sm:flex max-sm:items-start max-sm:gap-4"
               >
-                <span className={`${iconTile} mb-5`}>
+                <span className={`${iconTile} mb-5 max-sm:mb-0`}>
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </span>
-                <h3 className="mb-2 text-sm font-black tracking-[0.12em] text-dark">{title}</h3>
-                <p className="text-sm leading-relaxed text-gray-600">{text}</p>
+                <div>
+                  <h3 className="mb-2 text-sm font-black tracking-[0.12em] text-dark max-sm:mb-1">
+                    {title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-gray-600">{text}</p>
+                </div>
               </li>
             ))}
           </ul>
@@ -224,7 +232,7 @@ export default function VernaticsPage({ navigate }: Props) {
       {/* What children explore: the robot's most interesting capabilities */}
       <section
         id={FEATURES_ID}
-        className="scroll-mt-20 bg-white py-16 sm:py-20"
+        className="scroll-mt-20 bg-white py-12 sm:py-20"
         aria-labelledby="explore-heading"
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -235,7 +243,8 @@ export default function VernaticsPage({ navigate }: Props) {
             </h2>
           </div>
           <div className="grid items-center gap-8 lg:grid-cols-[5fr_7fr] lg:gap-10">
-            <div className="overflow-hidden rounded-3xl bg-peach-mid">
+            {/* Phones skip this photo: the same robot is in the video at the top of the page. */}
+            <div className="overflow-hidden rounded-3xl bg-peach-mid max-sm:hidden">
               <img
                 src={VERNATICS_POSTER_SRC}
                 alt="The Vernatics robot on a table with its LED matrix lit up"
@@ -246,12 +255,19 @@ export default function VernaticsPage({ navigate }: Props) {
                 className="block aspect-video h-auto w-full object-contain"
               />
             </div>
-            <ul className="grid gap-5 sm:grid-cols-2">
+            <ul className="grid gap-3 sm:grid-cols-2 sm:gap-5">
               {explore.map(({ icon, title, text }) => (
-                <li key={title} className="rounded-3xl bg-peach p-6">
-                  <span className={`${iconTile} mb-4 bg-white`}>{icon}</span>
-                  <h3 className="mb-2 text-lg font-black text-dark">{title}</h3>
-                  <p className="text-sm leading-relaxed text-gray-600">{text}</p>
+                <li
+                  key={title}
+                  className="rounded-3xl bg-peach p-5 sm:p-6 max-sm:flex max-sm:items-start max-sm:gap-4"
+                >
+                  <span className={`${iconTile} mb-4 bg-white max-sm:mb-0`}>{icon}</span>
+                  <div>
+                    <h3 className="mb-2 text-lg font-black text-dark max-sm:mb-1 max-sm:text-base">
+                      {title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-gray-600">{text}</p>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -282,6 +298,17 @@ export default function VernaticsPage({ navigate }: Props) {
                 decoding="async"
                 className="block h-auto w-full"
               />
+              {/* Phones: the desktop screenshot is too small to read, so offer it full size. */}
+              <figcaption className="border-t border-gray-100 px-4 py-2.5 text-center text-xs font-semibold text-gray-500 sm:hidden">
+                <a
+                  href={VERNATICS_PORTAL_SRC}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-8 items-center text-primary"
+                >
+                  Open the screenshot full size ↗
+                </a>
+              </figcaption>
             </figure>
             <ul className="grid gap-3 sm:grid-cols-2" aria-label="Portal features">
               {portalFeatures.map(({ icon: Icon, title, text }, i) => (
@@ -292,7 +319,7 @@ export default function VernaticsPage({ navigate }: Props) {
                     i === portalFeatures.length - 1 && portalFeatures.length % 2 === 1
                       ? "sm:col-span-2"
                       : ""
-                  }`}
+                  } ${i >= PHONE_PORTAL_FEATURES && !showAllFeatures ? "max-sm:hidden" : ""}`}
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-peach text-primary">
                     <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
@@ -304,16 +331,25 @@ export default function VernaticsPage({ navigate }: Props) {
                 </li>
               ))}
             </ul>
+            {portalFeatures.length > PHONE_PORTAL_FEATURES && !showAllFeatures && (
+              <button
+                type="button"
+                onClick={() => setShowAllFeatures(true)}
+                className="-mt-3 flex min-h-11 w-full items-center justify-center rounded-full border border-red-100 bg-white text-sm font-bold text-gray-700 sm:hidden"
+              >
+                {`Show all ${portalFeatures.length} features +`}
+              </button>
+            )}
           </div>
 
-          <h3 className="mb-5 mt-14 text-center text-xl font-black text-dark sm:text-2xl">
+          <h3 className="mb-5 mt-10 text-center text-xl font-black text-dark sm:mt-14 sm:text-2xl">
             Three Coding Levels
           </h3>
-          <ol className="mx-auto grid max-w-5xl gap-5 md:grid-cols-3">
+          <ol className="mx-auto grid max-w-5xl gap-3 sm:gap-5 md:grid-cols-3">
             {codingLevels.map(({ icon: Icon, name, level, text }, i) => (
               <li
                 key={name}
-                className="relative overflow-hidden rounded-3xl border border-red-100 bg-white p-6 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)]"
+                className="relative overflow-hidden rounded-3xl border border-red-100 bg-white p-5 sm:p-6 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)]"
               >
                 <div className="mb-4 flex items-center justify-between">
                   <span className={iconTile}>

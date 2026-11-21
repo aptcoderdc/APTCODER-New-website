@@ -186,17 +186,17 @@ export default function CareersPage({ openings = jobOpenings }: Props) {
               The Principles Behind Our Work
             </h2>
           </div>
-          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
             {values.map(({ icon: Icon, title, text }, i) => (
               <li
                 key={title}
-                className="group relative overflow-hidden rounded-3xl border border-red-100 bg-white p-6 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)] transition-all hover:-translate-y-1 hover:shadow-md"
+                className="group relative overflow-hidden rounded-3xl border border-red-100 bg-white p-5 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)] transition-all hover:-translate-y-1 hover:shadow-md sm:p-6"
               >
                 <span
                   className="absolute inset-x-0 top-0 h-1 bg-primary opacity-0 transition-opacity group-hover:opacity-100"
                   aria-hidden="true"
                 />
-                <div className="mb-5 flex items-center justify-between">
+                <div className="mb-3 flex items-center justify-between sm:mb-5">
                   <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-peach text-primary">
                     <Icon className="h-6 w-6" aria-hidden="true" />
                   </span>
@@ -224,9 +224,9 @@ export default function CareersPage({ openings = jobOpenings }: Props) {
               Why Join APTCODER
             </h2>
           </div>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-testid="why-join">
+          <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3" data-testid="why-join">
             {whyJoin.map(({ icon: Icon, title, text }) => (
-              <li key={title} className="flex gap-4 rounded-2xl bg-gray-50 p-6">
+              <li key={title} className="flex gap-4 rounded-2xl bg-gray-50 p-5 sm:p-6">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-primary shadow-sm">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
@@ -296,7 +296,7 @@ export default function CareersPage({ openings = jobOpenings }: Props) {
       {/* How to apply */}
       <section className="bg-white py-12 sm:py-20" aria-labelledby="careers-apply-heading">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-8 rounded-3xl bg-peach p-8 sm:p-10 md:grid-cols-[1.2fr_1fr]">
+          <div className="grid items-center gap-6 rounded-3xl bg-peach p-6 sm:gap-8 sm:p-10 md:grid-cols-[1.2fr_1fr]">
             <div>
               <h2
                 id="careers-apply-heading"
@@ -318,8 +318,9 @@ export default function CareersPage({ openings = jobOpenings }: Props) {
                 ))}
               </ul>
             </div>
-            <div className="flex flex-col items-center gap-3 rounded-2xl bg-white p-6 text-center shadow-sm">
-              <Mail className="h-7 w-7 text-primary" aria-hidden="true" />
+            {/* Phones: no card inside the card; just the address and the button. */}
+            <div className="flex flex-col items-center gap-3 rounded-2xl bg-white p-6 text-center shadow-sm max-sm:bg-transparent max-sm:p-0 max-sm:shadow-none">
+              <Mail className="h-7 w-7 text-primary max-sm:hidden" aria-hidden="true" />
               <a
                 href={`mailto:${CAREERS_EMAIL}`}
                 className="break-all font-bold text-dark hover:text-primary"

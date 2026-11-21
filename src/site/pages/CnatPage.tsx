@@ -152,17 +152,22 @@ export default function CnatPage(_props: Props) {
               thinking and demonstrate their problem-solving abilities.
             </p>
           </div>
-          <ul className="grid gap-5 md:grid-cols-3">
+          {/* Phones: icon beside the text, to keep the three cards short. */}
+          <ul className="grid gap-3 sm:gap-5 md:grid-cols-3">
             {pillars.map(({ icon: Icon, title, text }) => (
               <li
                 key={title}
-                className="rounded-3xl border border-red-100 bg-white p-5 sm:p-7 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)]"
+                className="rounded-3xl border border-red-100 bg-white p-5 sm:p-7 shadow-[0_2px_12px_-6px_rgba(17,24,39,0.15)] max-sm:flex max-sm:items-start max-sm:gap-4"
               >
-                <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-white">
+                <span className="mb-5 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-white max-sm:mb-0">
                   <Icon className="h-6 w-6" aria-hidden="true" />
                 </span>
-                <h3 className="mb-2 text-sm font-black tracking-[0.12em] text-dark">{title}</h3>
-                <p className="text-sm leading-relaxed text-gray-600">{text}</p>
+                <div>
+                  <h3 className="mb-2 text-sm font-black tracking-[0.12em] text-dark max-sm:mb-1">
+                    {title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-gray-600">{text}</p>
+                </div>
               </li>
             ))}
           </ul>

@@ -62,8 +62,8 @@ export default function SchoolSalesKit({ compact = false }: Props) {
         onClick={() => setOpen(true)}
         className={
           compact
-            ? 'border-2 border-gray-200 text-gray-700 font-semibold rounded-full px-7 py-3.5 hover:border-[#E8401C] transition-colors'
-            : 'border-2 border-gray-200 text-gray-700 font-bold rounded-full px-8 py-4 hover:border-[#E8401C] transition-colors'
+            ? 'border-2 border-gray-200 text-gray-700 font-semibold rounded-full px-7 py-3.5 hover:border-[#E8401C] transition-colors max-sm:w-full'
+            : 'border-2 border-gray-200 text-gray-700 font-bold rounded-full px-8 py-4 hover:border-[#E8401C] transition-colors max-sm:w-full'
         }
       >
         Get School Sales Kit

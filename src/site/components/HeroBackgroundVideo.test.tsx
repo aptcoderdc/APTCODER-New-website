@@ -1,6 +1,10 @@
 import { render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import HeroBackgroundVideo, { HERO_POSTER_SRC, HERO_VIDEO_SRC } from "./HeroBackgroundVideo";
+import HeroBackgroundVideo, {
+  HERO_POSTER_SRC,
+  HERO_VIDEO_MEDIA,
+  HERO_VIDEO_SRC,
+} from "./HeroBackgroundVideo";
 
 function mockMotionPreference(reduce: boolean) {
   window.matchMedia = ((query: string) => ({
@@ -29,7 +33,10 @@ describe("homepage hero background video", () => {
     const videos = container.querySelectorAll("video");
     expect(videos).toHaveLength(1);
     const video = videos[0]!;
-    expect(video.getAttribute("src")).toBe(HERO_VIDEO_SRC);
+    // The file is offered only from 768px wide, so phones never download it.
+    const source = video.querySelector("source")!;
+    expect(source.getAttribute("src")).toBe(HERO_VIDEO_SRC);
+    expect(source.getAttribute("media")).toBe(HERO_VIDEO_MEDIA);
     expect(video.getAttribute("poster")).toBe(HERO_POSTER_SRC);
     expect(video.muted).toBe(true);
     expect(video.loop).toBe(true);

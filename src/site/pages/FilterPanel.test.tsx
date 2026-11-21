@@ -141,3 +141,26 @@ describe("catalogue filter controls", () => {
     expect(onClear).toHaveBeenCalledOnce();
   });
 });
+
+describe("phone filter sheet grade chips", () => {
+  it("shows grades as tappable chips that still behave as checkboxes", () => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <FilterPanel
+        filters={emptyCatalogueFilters}
+        courses={sampleCourses}
+        onChange={onChange}
+        onClear={vi.fn()}
+        gradeChips
+      />,
+    );
+    const chips = container.querySelectorAll('input[id^="grades-"][id$="-chip"]');
+    expect(chips.length).toBeGreaterThan(0);
+    // Only grades become chips; the other groups keep their checkbox rows.
+    expect(screen.getByRole("checkbox", { name: /Live/ }).id).not.toMatch(/-chip$/);
+    fireEvent.click(chips[0]!);
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({ grades: [expect.any(Number)] }),
+    );
+  });
+});

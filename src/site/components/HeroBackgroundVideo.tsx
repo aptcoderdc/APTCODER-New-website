@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { assetUrl } from "@/site/assetUrl";
 
 export const HERO_VIDEO_SRC = assetUrl("/videos/APTbackvideo.mp4");
+/** The background video plays from this width up; narrower screens show the poster. */
+export const HERO_VIDEO_MEDIA = "(min-width: 768px)";
 export const HERO_POSTER_SRC = assetUrl("/videos/APTbackvideo-poster.jpg");
 
 /**
@@ -58,7 +60,6 @@ export default function HeroBackgroundVideo() {
       <video
         ref={videoRef}
         className="hero-video h-full w-full object-cover object-[62%_center] lg:object-[center_45%]"
-        src={HERO_VIDEO_SRC}
         poster={HERO_POSTER_SRC}
         autoPlay
         muted
@@ -67,7 +68,11 @@ export default function HeroBackgroundVideo() {
         preload="auto"
         disablePictureInPicture
         tabIndex={-1}
-      />
+      >
+        {/* Phones (below 768px) get no source, so the ~1 MB video is never downloaded there;
+            the poster shows instead (the text area is washed almost white on phones anyway). */}
+        <source src={HERO_VIDEO_SRC} type="video/mp4" media={HERO_VIDEO_MEDIA} />
+      </video>
       {/* 1. Soft white wash over the whole video: bright, calm, on-brand. */}
       <div className="absolute inset-0 bg-white/45 lg:bg-white/35" />
       {/* 2a. Text protection (phones and tablets): content is stacked, with the text in the top

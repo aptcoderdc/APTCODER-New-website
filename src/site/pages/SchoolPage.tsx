@@ -46,7 +46,7 @@ export default function SchoolPage({ navigate }: Props) {
       {/* Hero */}
       <section className="relative overflow-hidden bg-white">
         <div className="absolute right-0 top-0 w-1/2 h-full bg-[#FFF5F2] rounded-l-[80px] -z-0" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           <div>
             <div className="section-label mb-4">{t('APTCODER FOR SCHOOLS', 'स्कूलों के लिए APTCODER')}</div>
             {/* Two lines on desktop; the offer (Coding, AI & Robotics) is highlighted. */}
@@ -61,11 +61,12 @@ export default function SchoolPage({ navigate }: Props) {
                 'स्कूलों को व्यावहारिक कोडिंग, AI और रोबोटिक्स शिक्षा से सशक्त बनाना, जो हर छात्र में रचनात्मकता, समस्या-समाधान कौशल और तकनीकी आत्मविश्वास विकसित करती है।',
               )}
             </p>
-            <div className="flex flex-wrap gap-3 mb-8">
+            {/* Phones: the two buttons stack at full width. */}
+            <div className="flex flex-wrap gap-3 mb-8 max-sm:flex-col">
               <button
                 type="button"
                 onClick={() => navigate('contact', sectionIds.contactForm)}
-                className="bg-[#E8401C] text-white font-semibold rounded-full px-7 py-3.5 hover:bg-[#C73516] transition-colors flex items-center gap-2"
+                className="bg-[#E8401C] text-white font-semibold rounded-full px-7 py-3.5 hover:bg-[#C73516] transition-colors flex items-center justify-center gap-2"
               >
                 Partner with Us →
               </button>
@@ -73,9 +74,13 @@ export default function SchoolPage({ navigate }: Props) {
             </div>
             {/* Three highlights in equal columns, each centred in its column. */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4">
-              {['Structured Curriculum', 'Teacher Enablement', 'Hands-on Learning'].map((f) => (
+              {[
+                ['📘', 'Structured Curriculum'],
+                ['👩‍🏫', 'Teacher Enablement'],
+                ['🛠️', 'Hands-on Learning'],
+              ].map(([icon, f]) => (
                 <div key={f} className="flex flex-col items-center gap-2 text-center sm:flex-row sm:justify-center sm:text-left">
-                  <div className="w-8 h-8 shrink-0 bg-[#FFF5F2] rounded-lg flex items-center justify-center text-sm">📚</div>
+                  <div className="w-8 h-8 shrink-0 bg-[#FFF5F2] rounded-lg flex items-center justify-center text-sm" aria-hidden="true">{icon}</div>
                   <span className="text-xs font-medium text-gray-600">{f}</span>
                 </div>
               ))}
@@ -101,12 +106,12 @@ export default function SchoolPage({ navigate }: Props) {
           <p className="text-xs font-bold text-[#E8401C] uppercase tracking-widest mb-2">SCHOOLS WE WORK WITH</p>
           <h2 className="text-2xl font-black text-gray-900 mb-2">Trusted by Schools</h2>
           <p className="text-sm text-gray-500 mb-7">Supporting technology learning with schools and educators.</p>
-          {/* Five logos in one row on desktop; 3 + 2 on tablets, 2 + 2 + 1 on phones. */}
+          {/* Five logos in one row on desktop; 3 + 2 on tablets and phones. */}
           <ul className="flex flex-wrap justify-center gap-3 sm:gap-4 lg:flex-nowrap">
             {partnerSchools.map((school) => (
               <li
                 key={school.id}
-                className="flex h-28 w-[calc(50%-0.375rem)] items-center justify-center rounded-2xl border border-gray-100 bg-white px-4 sm:h-32 sm:w-[calc(33.333%-0.667rem)] lg:w-auto lg:flex-1"
+                className="flex h-24 w-[calc(33.333%-0.5rem)] items-center justify-center rounded-2xl border border-gray-100 bg-white px-2 sm:h-32 sm:w-[calc(33.333%-0.667rem)] sm:px-4 lg:w-auto lg:flex-1"
                 title={school.name}
                 data-school-id={school.id}
               >
@@ -116,7 +121,7 @@ export default function SchoolPage({ navigate }: Props) {
                   loading="lazy"
                   decoding="async"
                   draggable={false}
-                  className="h-20 w-full max-w-[9rem] object-contain sm:h-24"
+                  className="h-16 w-full max-w-[9rem] object-contain sm:h-24"
                 />
               </li>
             ))}
@@ -251,7 +256,7 @@ export default function SchoolPage({ navigate }: Props) {
           <p className="text-gray-600 mb-8">
             Partner with AptCoder and empower your students with real skills for tomorrow.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-4 max-sm:flex-col">
             <button
               type="button"
               onClick={() => navigate('contact', sectionIds.contactForm)}

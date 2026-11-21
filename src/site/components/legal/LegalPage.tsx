@@ -75,7 +75,7 @@ function Block({ block }: { block: LegalBlock }): ReactNode {
 export default function LegalPage({ document: doc }: { document: LegalDocument }) {
   return (
     // Legal wording is shown exactly as provided, so it is not translated into Hindi.
-    <main className="min-h-screen bg-white" data-translate="no">
+    <main id="top" className="min-h-screen bg-white" data-translate="no">
       <div className="mx-auto max-w-3xl px-5 py-10 sm:px-8 sm:py-14">
         <header className="mb-10 border-b border-gray-100 pb-8">
           <a href={pageHref("home")} aria-label="APTCODER home" className="mb-8 inline-block">
@@ -88,13 +88,36 @@ export default function LegalPage({ document: doc }: { document: LegalDocument }
           <p className="mt-1 text-sm text-gray-500">Last updated: {LEGAL_LAST_UPDATED}</p>
         </header>
 
+        {/* Phones: a folded list of the sections, since the page is many screens long. */}
+        <details className="mb-8 rounded-2xl border border-gray-200 sm:hidden">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between px-4 text-sm font-bold text-dark">
+            On this page
+            <span aria-hidden="true" className="text-primary">
+              +
+            </span>
+          </summary>
+          <ol className="border-t border-gray-100 px-4 py-2">
+            {doc.sections.map((section, i) => (
+              <li key={section.id}>
+                <a
+                  href={`#${section.id}`}
+                  className="flex min-h-11 items-center gap-2 text-sm text-gray-700"
+                >
+                  <span className="text-primary tabular-nums">{i + 1}.</span>
+                  {section.title}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </details>
+
         <article>
           {doc.sections.map((section, i) => (
             <section
               key={section.id}
               id={section.id}
               aria-labelledby={`${section.id}-heading`}
-              className="pb-8"
+              className="scroll-mt-4 pb-8"
               data-legal-section
             >
               <h2
@@ -112,6 +135,14 @@ export default function LegalPage({ document: doc }: { document: LegalDocument }
             </section>
           ))}
         </article>
+        <p className="border-t border-gray-100 pt-6 text-center sm:hidden">
+          <a
+            href="#top"
+            className="inline-flex min-h-11 items-center text-sm font-bold text-primary"
+          >
+            Back to top ↑
+          </a>
+        </p>
       </div>
     </main>
   );
