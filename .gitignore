@@ -36,3 +36,5 @@ dist-ssr
 
 # pnpm's own content store: local cache, never part of the project
 .pnpm-store/
+
+__pycache__/
