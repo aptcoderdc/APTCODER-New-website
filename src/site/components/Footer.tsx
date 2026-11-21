@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { pageHref, sectionIds, type Page, type SiteNavigate } from "../page";
+import FreeClassModal from "./freeClass/FreeClassModal";
 import { useKccJoin } from "./kcc/KccContext";
 import { CODELY_PORTAL_URL } from "../data/contact";
 import { useLanguage } from "./LanguageContext";
@@ -99,6 +101,7 @@ function FooterLink({
 export default function Footer({ navigate }: FooterProps) {
   const { t } = useLanguage();
   const openKccJoin = useKccJoin();
+  const [freeClassOpen, setFreeClassOpen] = useState(false);
 
   return (
     <footer className="bg-gray-950 text-white">
@@ -187,8 +190,11 @@ export default function Footer({ navigate }: FooterProps) {
                   ))}
                 </a>
               </div>
+              {/* Same "Book a Free Class" popup as the homepage buttons (not the Courses page). */}
               <button
-                onClick={() => navigate("courses")}
+                type="button"
+                onClick={() => setFreeClassOpen(true)}
+                aria-haspopup="dialog"
                 className="inline-block bg-[#E8401C] text-white text-sm font-semibold rounded-full px-5 py-2.5 hover:bg-[#C73516] transition-colors"
               >
                 {t("Book a Free Class →", "मुफ़्त क्लास बुक करें →")}
@@ -199,10 +205,11 @@ export default function Footer({ navigate }: FooterProps) {
 
         <div className="mt-12 pt-8 border-t border-gray-800">
           <p className="text-gray-500 text-sm text-center sm:text-left">
-            © 2024 APTCODER. All rights reserved.
+            © {new Date().getFullYear()} APTCODER. All rights reserved.
           </p>
         </div>
       </div>
+      <FreeClassModal open={freeClassOpen} onOpenChange={setFreeClassOpen} />
     </footer>
   );
 }

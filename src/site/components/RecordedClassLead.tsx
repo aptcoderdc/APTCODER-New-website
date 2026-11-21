@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react"
 import { sendToSheet } from "../api/sheetForms"
 import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_HREF } from "../data/contact"
+import { FIELD_TEXT } from "./formFieldStyles"
 
 const interests = [
   "Coding & Games",
@@ -145,7 +146,7 @@ export default function RecordedClassLead() {
                     autoComplete="name"
                     value={parentName}
                     onChange={(event) => setParentName(event.target.value)}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-primary"
+                    className={`w-full rounded-xl border border-gray-200 px-4 py-3 ${FIELD_TEXT} outline-none focus:border-primary`}
                   />
                 </label>
                 <label className="block">
@@ -159,7 +160,7 @@ export default function RecordedClassLead() {
                     autoComplete="email"
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-primary"
+                    className={`w-full rounded-xl border border-gray-200 px-4 py-3 ${FIELD_TEXT} outline-none focus:border-primary`}
                   />
                 </label>
                 <button

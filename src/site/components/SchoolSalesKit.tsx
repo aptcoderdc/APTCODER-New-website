@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { sendToSheet } from '../api/sheetForms'
 import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_HREF } from '../data/contact'
+import { FIELD_TEXT } from './formFieldStyles'
 
 interface Props {
   compact?: boolean
@@ -70,7 +71,8 @@ export default function SchoolSalesKit({ compact = false }: Props) {
             if (event.target === event.currentTarget) close()
           }}
         >
-          <div className="w-full max-w-lg rounded-3xl bg-white shadow-2xl overflow-hidden">
+          {/* Scrolls inside itself when taller than the screen (short phones, keyboard open). */}
+          <div className="w-full max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto overscroll-contain rounded-3xl bg-white shadow-2xl">
             <div className="bg-[#FFF5F2] px-6 sm:px-8 py-6 flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-bold text-[#E8401C] uppercase tracking-widest mb-2">
@@ -133,7 +135,7 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                       maxLength={120}
                       autoComplete="name"
                       {...field('fullName')}
-                      className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C]"
+                      className={`mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-3 ${FIELD_TEXT} focus:outline-none focus:border-[#E8401C]`}
                     />
                   </label>
                   <label className="text-xs font-semibold text-gray-700">
@@ -144,7 +146,7 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                       maxLength={200}
                       autoComplete="email"
                       {...field('email')}
-                      className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C]"
+                      className={`mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-3 ${FIELD_TEXT} focus:outline-none focus:border-[#E8401C]`}
                     />
                   </label>
                 </div>
@@ -155,7 +157,7 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                     maxLength={200}
                     autoComplete="organization"
                     {...field('school')}
-                    className="mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C]"
+                    className={`mt-1.5 w-full rounded-xl border border-gray-200 px-4 py-3 ${FIELD_TEXT} focus:outline-none focus:border-[#E8401C]`}
                   />
                 </label>
                 <label className="block text-xs font-semibold text-gray-700">
@@ -163,7 +165,7 @@ export default function SchoolSalesKit({ compact = false }: Props) {
                   <select
                     required
                     {...field('role')}
-                    className="mt-1.5 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C]"
+                    className={`mt-1.5 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 ${FIELD_TEXT} focus:outline-none focus:border-[#E8401C]`}
                   >
                     <option value="">Select role</option>
                     <option>School leader</option>

@@ -77,8 +77,8 @@ export default function SocialLinks({
             data-social={link.platform}
             className={
               variant === "dark"
-                ? "flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-gray-300 transition-colors hover:bg-[#E8401C] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8401C] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
-                : `flex h-10 w-10 items-center justify-center rounded-full text-white shadow-sm transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8401C] focus-visible:ring-offset-2 ${brandBackground[link.platform]}`
+                ? "flex h-11 w-11 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-gray-800 text-gray-300 transition-colors hover:bg-[#E8401C] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8401C] focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950"
+                : `flex h-11 w-11 sm:h-10 sm:w-10 items-center justify-center rounded-full text-white shadow-sm transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8401C] focus-visible:ring-offset-2 ${brandBackground[link.platform]}`
             }
           >
             <SocialIcon

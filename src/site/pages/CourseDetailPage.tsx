@@ -90,7 +90,7 @@ export default function CourseDetailPage({ course }: { course: CourseRecord }) {
   ];
 
   return (
-    <main className="pb-24 md:pb-0">
+    <main className="pb-24 lg:pb-0">
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
         <nav aria-label="Breadcrumb" className="text-sm text-gray-600">
           <ol className="flex flex-wrap items-center gap-2">
@@ -397,7 +397,13 @@ export default function CourseDetailPage({ course }: { course: CourseRecord }) {
           )}
         </div>
 
-        <aside className="h-fit rounded-2xl border border-gray-200 bg-white p-5 shadow-sm lg:sticky lg:top-24">
+        {/* Below 1024px the fixed bottom bar already shows the title and "Book a Free Class", so
+            this box is hidden there unless it carries something extra (a price or an action). */}
+        <aside
+          className={`h-fit rounded-2xl border border-gray-200 bg-white p-5 shadow-sm lg:sticky lg:top-24 ${
+            course.priceDisplay || actionLabel(course) ? "" : "hidden lg:block"
+          }`}
+        >
           <h2 className="text-lg font-black text-gray-900" data-translate="no">
             {course.title}
           </h2>
@@ -424,7 +430,7 @@ export default function CourseDetailPage({ course }: { course: CourseRecord }) {
       </div>
 
       <div
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white p-3 shadow-lg md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white p-3 shadow-lg lg:hidden"
         data-fixed-bottom-bar
       >
         <div className="mx-auto flex max-w-7xl items-center gap-3">

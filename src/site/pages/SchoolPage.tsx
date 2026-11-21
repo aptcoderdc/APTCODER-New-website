@@ -2,6 +2,7 @@ import { sectionIds, type SiteNavigate } from '../page'
 import SchoolSalesKit from '../components/SchoolSalesKit'
 import { partnerSchools } from '../data/schools'
 import { useLanguage } from '../components/LanguageContext'
+import StatGrid, { type Stat } from '../components/StatGrid'
 
 interface Props {
   navigate: SiteNavigate
@@ -20,6 +21,13 @@ const schoolTestimonials = [
     quote: '"Our students have created amazing projects and participated in C-NAT with great enthusiasm. AptCoder is a valuable partner in our digital learning journey."',
     name: 'Director', school: 'Mount Carmel School',
   },
+]
+
+const schoolStats: Stat[] = [
+  { icon: '🏫', num: '500+', label: 'Partner Schools' },
+  { icon: '👦', num: '2,00,000+', label: 'Students Impacted' },
+  { icon: '👨‍🏫', num: '10,000+', label: 'Teachers Trained' },
+  { icon: '🌍', num: '15+', label: 'Countries' },
 ]
 
 const steps = [
@@ -163,20 +171,7 @@ export default function SchoolPage({ navigate }: Props) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="section-label justify-center mb-3">OUR IMPACT IN SCHOOLS</div>
           <h2 className="text-3xl font-black text-gray-900 mb-12">Building a Stronger, Smarter Generation</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { icon: '🏫', num: '500+', label: 'Partner Schools' },
-              { icon: '👦', num: '2,00,000+', label: 'Students Impacted' },
-              { icon: '👨‍🏫', num: '10,000+', label: 'Teachers Trained' },
-              { icon: '🌍', num: '15+', label: 'Countries' },
-            ].map((s) => (
-              <div key={s.label} className="bg-white rounded-2xl p-7 shadow-sm">
-                <div className="text-3xl mb-3">{s.icon}</div>
-                <p className="text-4xl font-black text-[#E8401C] mb-1">{s.num}</p>
-                <p className="text-sm text-gray-600 font-medium">{s.label}</p>
-              </div>
-            ))}
-          </div>
+          <StatGrid variant="cards" stats={schoolStats} />
         </div>
       </section>
 

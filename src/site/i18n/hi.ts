@@ -1135,6 +1135,7 @@ export const hiPatterns: [RegExp, (...groups: string[]) => string][] = [
   [/^(\d+) Months$/, (n) => `${n} महीने`],
   [/^(\d+) Weeks?$/, (n) => `${n} सप्ताह`],
   [/^(\d+)-(\d+) years$/, (a, b) => `${a}-${b} वर्ष`],
+  [/^Show (\d+) courses?$/, (n) => `${n} कोर्स दिखाएँ`],
   [/^(.+) Courses$/, (c) => `${cat(c)} कोर्स`],
   [/^(.+) Courses — APTCODER$/, (c) => `${cat(c)} कोर्स — APTCODER`],
   [/^Search: (.*)$/, (q) => `खोज: ${q}`],

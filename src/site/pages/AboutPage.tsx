@@ -3,6 +3,7 @@ import { useLanguage } from '../components/LanguageContext'
 import { partners } from '../data/partners'
 import { team } from '../data/team'
 import SocialLinks from '../components/SocialLinks'
+import StatGrid, { type Stat } from '../components/StatGrid'
 
 interface Props {
   navigate: (page: Page) => void
@@ -15,6 +16,14 @@ const journey = [
   { year: '2023', title: 'Global Presence', desc: 'Extended to 15+ countries and strengthened our community of learners.' },
   { year: '2024', title: 'New Possibilities', desc: 'Launched innovative programs like Vernatics, C-NAT and global collaborations.' },
   { year: '2025+', title: 'A Bigger Impact', desc: 'Continuing to scale, reach more schools and enable more children to create with technology.' },
+]
+
+const impactStats: Stat[] = [
+  { icon: '👥', num: '5K+', label: 'Students Empowered' },
+  { icon: '🎓', num: '250+', label: 'Teachers Trained' },
+  { icon: '🌍', num: '15+', label: 'Countries Reached' },
+  { icon: '🏫', num: '500+', label: 'Government Schools' },
+  { icon: '🏆', num: '20+', label: 'Competitions & Camps' },
 ]
 
 export default function AboutPage({ navigate }: Props) {
@@ -144,21 +153,7 @@ export default function AboutPage({ navigate }: Props) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-black text-gray-900 mb-2">Our Impact So Far</h2>
           <p className="text-gray-500 mb-10">A growing community of learners, teachers and partner institutions.</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8">
-            {[
-              { icon: '👥', num: '5K+', label: 'Students Empowered' },
-              { icon: '🎓', num: '250+', label: 'Teachers Trained' },
-              { icon: '🌍', num: '15+', label: 'Countries Reached' },
-              { icon: '🏫', num: '500+', label: 'Government Schools' },
-              { icon: '🏆', num: '20+', label: 'Competitions & Camps' },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="w-14 h-14 bg-[#FFF5F2] rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">{s.icon}</div>
-                <p className="text-3xl font-black text-gray-900">{s.num}</p>
-                <p className="text-sm text-gray-500 mt-1">{s.label}</p>
-              </div>
-            ))}
-          </div>
+          <StatGrid variant="plain" stats={impactStats} />
         </div>
       </section>
 

@@ -495,8 +495,9 @@ footer:has(~ .whatsapp-fab) {
   padding-bottom: 40px;
 }
 
-/* Sit above a fixed bottom bar (marked data-fixed-bottom-bar) instead of covering it. */
-@media (max-width: 767px) {
+/* Sit above a fixed bottom bar (marked data-fixed-bottom-bar) instead of covering it. The
+   course page's bar shows below 1024px (lg), so this matches that range. */
+@media (max-width: 1023px) {
   body:has([data-fixed-bottom-bar]) .whatsapp-fab {
     bottom: calc(var(--fixed-bottom-bar-height, 69px) + 14px);
   }

@@ -86,7 +86,7 @@ function FilterGroup({
             <label
               key={label}
               htmlFor={id}
-              className={`flex min-h-8 items-center gap-2 text-sm ${count ? "cursor-pointer text-gray-700" : "cursor-not-allowed text-gray-400"}`}
+              className={`flex min-h-11 items-center gap-2 text-sm lg:min-h-8 ${count ? "cursor-pointer text-gray-700" : "cursor-not-allowed text-gray-400"}`}
             >
               <Checkbox
                 id={id}
@@ -338,19 +338,28 @@ export default function CoursesPage({ filters, onFiltersChange, navigate }: Prop
               >
                 <SlidersHorizontal aria-hidden="true" className="h-4 w-4" /> Filters
               </button>
-              <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl">
-                <SheetHeader className="mb-4 pr-8 text-left">
-                  <SheetTitle>Filter courses</SheetTitle>
-                  <SheetDescription>Select options, then apply to the catalogue.</SheetDescription>
-                </SheetHeader>
-                <FilterPanel filters={filters} onChange={updateFilters} onClear={clearFilters} />
-                <SheetFooter className="mt-5">
+              {/* Only the options scroll; the footer stays pinned so the button (with the live
+                  result count, as filters apply as soon as they are ticked) is always in reach. */}
+              <SheetContent
+                side="bottom"
+                className="flex max-h-[85dvh] flex-col gap-0 rounded-t-2xl p-0"
+              >
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pt-6 pb-2">
+                  <SheetHeader className="mb-4 pr-8 text-left">
+                    <SheetTitle>Filter courses</SheetTitle>
+                    <SheetDescription>
+                      Select options, then apply to the catalogue.
+                    </SheetDescription>
+                  </SheetHeader>
+                  <FilterPanel filters={filters} onChange={updateFilters} onClear={clearFilters} />
+                </div>
+                <SheetFooter className="shrink-0 border-t border-gray-100 bg-white px-6 py-4">
                   <button
                     type="button"
                     onClick={() => setFilterSheetOpen(false)}
-                    className="min-h-11 rounded-full bg-[#E8401C] px-6 font-bold text-white"
+                    className="min-h-12 w-full rounded-full bg-[#E8401C] px-6 font-bold text-white"
                   >
-                    Apply filters
+                    {`Show ${results.length} ${results.length === 1 ? "course" : "courses"}`}
                   </button>
                 </SheetFooter>
               </SheetContent>

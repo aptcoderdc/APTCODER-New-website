@@ -11,6 +11,7 @@ import {
   OFFICE_ADDRESS_LINES,
   OFFICE_MAPS_URL,
 } from '../data/contact'
+import { FIELD_TEXT } from '../components/formFieldStyles'
 
 interface Props {
   navigate: (page: Page) => void
@@ -140,7 +141,7 @@ export default function ContactPage(_props: Props) {
                       placeholder="Your full name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors"
+                      className={`w-full border border-gray-200 rounded-xl px-4 py-3 ${FIELD_TEXT} focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors`}
                     />
                   </div>
                   <div>
@@ -153,7 +154,7 @@ export default function ContactPage(_props: Props) {
                       placeholder="your@email.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors"
+                      className={`w-full border border-gray-200 rounded-xl px-4 py-3 ${FIELD_TEXT} focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors`}
                     />
                   </div>
                 </div>
@@ -171,7 +172,7 @@ export default function ContactPage(_props: Props) {
                       placeholder="+91 00000 00000"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors"
+                      className={`w-full border border-gray-200 rounded-xl px-4 py-3 ${FIELD_TEXT} focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors`}
                     />
                   </div>
                   <div>
@@ -180,7 +181,7 @@ export default function ContactPage(_props: Props) {
                       required
                       value={formData.role}
                       onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors bg-white"
+                      className={`w-full border border-gray-200 rounded-xl px-4 py-3 ${FIELD_TEXT} focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors bg-white`}
                     >
                       <option value="">Select an option</option>
                       <option>Parent</option>
@@ -198,7 +199,7 @@ export default function ContactPage(_props: Props) {
                     required
                     value={formData.topic}
                     onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors bg-white"
+                    className={`w-full border border-gray-200 rounded-xl px-4 py-3 ${FIELD_TEXT} focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors bg-white`}
                   >
                     <option value="">Select an option</option>
                     <option>Book a Free Class</option>
@@ -218,7 +219,7 @@ export default function ContactPage(_props: Props) {
                     placeholder="Tell us how we can help..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors resize-none"
+                    className={`w-full border border-gray-200 rounded-xl px-4 py-3 ${FIELD_TEXT} focus:outline-none focus:border-[#E8401C] focus:ring-1 focus:ring-[#E8401C] transition-colors resize-none`}
                   />
                 </div>
 
@@ -236,16 +237,18 @@ export default function ContactPage(_props: Props) {
                   </p>
                 )}
 
-                <div className="flex items-center gap-4">
+                {/* Phones: full-width button with the consent line underneath (side by side, the
+                    button was squeezed into three lines). From 640px: the original single row. */}
+                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
                   <button
                     type="submit"
                     disabled={status === 'sending'}
                     aria-busy={status === 'sending'}
-                    className="bg-[#E8401C] text-white font-bold rounded-full px-8 py-3.5 hover:bg-[#C73516] transition-colors flex items-center gap-2 disabled:opacity-70 disabled:cursor-wait"
+                    className="bg-[#E8401C] text-white font-bold rounded-full px-8 py-3.5 hover:bg-[#C73516] transition-colors flex items-center justify-center gap-2 whitespace-nowrap disabled:opacity-70 disabled:cursor-wait"
                   >
                     {status === 'sending' ? 'Sending…' : 'Send Message →'}
                   </button>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-400 text-center sm:text-left">
                     By clicking send, you agree to our{' '}
                     <a
                       href={pageHref("privacy")}
@@ -279,7 +282,7 @@ export default function ContactPage(_props: Props) {
                   <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-lg shrink-0">✉️</div>
                   <div>
                     <p className="font-bold text-gray-900 text-sm mb-0.5">Email Us</p>
-                    <p className="text-[#E8401C] text-sm font-semibold">{CONTACT_EMAIL}</p>
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex min-h-11 items-center text-[#E8401C] text-sm font-semibold hover:underline sm:inline sm:min-h-0">{CONTACT_EMAIL}</a>
                     <p className="text-xs text-gray-400 mt-1">We typically respond within 1–2 business days.</p>
                   </div>
                 </div>
@@ -287,7 +290,7 @@ export default function ContactPage(_props: Props) {
                   <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-lg shrink-0">📞</div>
                   <div>
                     <p className="font-bold text-gray-900 text-sm mb-0.5">Call Us</p>
-                    <a href={CONTACT_PHONE_HREF} className="text-gray-800 text-sm font-semibold hover:text-[#E8401C] transition-colors">
+                    <a href={CONTACT_PHONE_HREF} className="inline-flex min-h-11 items-center text-gray-800 text-sm font-semibold hover:text-[#E8401C] transition-colors sm:inline sm:min-h-0">
                       {CONTACT_PHONE}
                     </a>
                     <p className="text-xs text-gray-400 mt-1">Mon – Sat, 9:00 AM – 6:00 PM (IST)</p>

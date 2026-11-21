@@ -25,7 +25,8 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
     { label: t("Careers", "करियर"), page: "careers" },
   ];
 
-  const languageToggle = (
+  // The menu version (below 1024px) has larger buttons for touch.
+  const languageToggle = (touch: boolean) => (
     <div
       className="inline-flex items-center rounded-full bg-gray-100 p-1"
       aria-label="Website language"
@@ -34,9 +35,9 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
         <button
           key={item}
           onClick={() => setLanguage(item)}
-          className={`rounded-full px-2.5 py-1 text-xs font-bold transition-colors ${
-            language === item ? "bg-white text-[#E8401C] shadow-sm" : "text-gray-500"
-          }`}
+          className={`rounded-full text-xs font-bold transition-colors ${
+            touch ? "min-h-10 min-w-12 px-3.5" : "px-2.5 py-1"
+          } ${language === item ? "bg-white text-[#E8401C] shadow-sm" : "text-gray-500"}`}
           aria-pressed={language === item}
         >
           {item === "en" ? "EN" : "हिं"}
@@ -78,7 +79,7 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
 
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-3">
-            {languageToggle}
+            {languageToggle(false)}
             {/* Search: the course catalogue's search box is the site's search. */}
             <button
               type="button"
@@ -125,7 +126,7 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
               mobileOpen ? t("Close menu", "मेनू बंद करें") : t("Open menu", "मेनू खोलें")
             }
             aria-expanded={mobileOpen}
-            className="lg:hidden p-2 text-gray-600"
+            className="lg:hidden -mr-2 flex h-11 w-11 items-center justify-center text-gray-600"
           >
             {mobileOpen ? (
               <svg
@@ -158,7 +159,7 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
           <div className="lg:hidden py-4 border-t border-gray-100">
             <div className="flex items-center justify-between px-2 pb-3 mb-1 border-b border-gray-100">
               <span className="text-xs font-semibold text-gray-500">{t("Language", "भाषा")}</span>
-              {languageToggle}
+              {languageToggle(true)}
             </div>
             {links.map((link) => (
               <button
@@ -179,7 +180,7 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
                 href={SIGN_IN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 text-center text-sm font-semibold text-gray-800 border border-gray-300 rounded-full px-4 py-2"
+                className="flex min-h-11 flex-1 items-center justify-center text-center text-sm font-semibold text-gray-800 border border-gray-300 rounded-full px-4 py-2"
               >
                 {t("Sign In", "साइन इन")}
               </a>
@@ -187,7 +188,7 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
                 href={SIGN_UP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 text-center text-sm font-semibold text-white bg-[#E8401C] rounded-full px-4 py-2"
+                className="flex min-h-11 flex-1 items-center justify-center text-center text-sm font-semibold text-white bg-[#E8401C] rounded-full px-4 py-2"
               >
                 {t("Join for Free", "मुफ़्त जुड़ें")}
               </a>
