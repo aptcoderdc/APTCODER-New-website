@@ -33,3 +33,6 @@ dist-ssr
 
 # Temporary lock files Office creates while a document is open
 ~$*
+
+# pnpm's own content store: local cache, never part of the project
+.pnpm-store/
