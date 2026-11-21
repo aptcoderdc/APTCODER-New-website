@@ -1,10 +1,10 @@
-import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
+import { sitePages } from "./scripts/site-pages.mjs";
 
 /**
  * GitHub Pages build (static site). Enabled by `npm run build:pages` (GITHUB_PAGES=true), used by
@@ -26,37 +26,9 @@ const pagesBase = rawBase === "" || rawBase === "/" ? "/" : rawBase.replace(/\/?
 /** Address the 404.html app shell is rendered from (anything but "/", see `spa` below). */
 const SPA_SHELL_PATH = "/?spa-shell";
 
-/** Every page of the site, so the pre-render does not depend on finding links. */
+/** Every page of the site (scripts/site-pages.mjs), so the pre-render does not depend on links. */
 function staticPages(): { path: string }[] {
-  const catalogue = JSON.parse(
-    readFileSync(
-      new URL("./src/site/data/courseCatalogue.generated.json", import.meta.url),
-      "utf8",
-    ),
-  ) as { courses: { routeSlug: string }[] };
-  // The hand-added Vernatics courses (Robo Star, Orbit, Galaxy) are not in the generated file.
-  const handAddedSlugs = [
-    ...readFileSync(
-      new URL("./src/site/data/vernaticsCourses.ts", import.meta.url),
-      "utf8",
-    ).matchAll(/slug: "([a-z0-9-]+)"/g),
-  ].map((match) => match[1]);
-  // Old /courses/category/<slug> addresses only redirect to /courses, so they are not pre-rendered.
-  const pages = [
-    "/",
-    "/courses",
-    "/about",
-    "/school",
-    "/contact",
-    "/vernatics",
-    "/c-nat",
-    "/careers",
-    "/privacy-policy",
-    "/terms-and-conditions",
-    ...catalogue.courses.map((course) => `/courses/${course.routeSlug}`),
-    ...handAddedSlugs.map((slug) => `/courses/${slug}`),
-  ];
-  return pages.map((path) => ({ path }));
+  return sitePages().map(({ path }) => ({ path }));
 }
 
 export default defineConfig({

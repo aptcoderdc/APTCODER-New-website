@@ -23,6 +23,7 @@ import { useLocation } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
 import { assetUrl } from "@/site/assetUrl";
+import site from "@/site/data/site.json";
 
 function NotFoundComponent() {
   return (
@@ -86,6 +87,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      // Browser toolbar colour on phones (APTCODER orange).
+      { name: "theme-color", content: site.themeColor },
       // Fallback tab title; every page sets its own ("APTCODER | Home", "APTCODER | About Us"…).
       { title: "APTCODER" },
     ],
@@ -95,6 +98,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      // The font files themselves come from fonts.gstatic.com; connecting early speeds up text.
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap",
@@ -114,6 +119,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         type: "image/png",
         sizes: "192x192",
       },
+      { rel: "manifest", href: assetUrl("/site.webmanifest") },
       { rel: "apple-touch-icon", href: assetUrl("/images/brand/apple-touch-icon.png?v=2"), sizes: "180x180" },
     ],
   }),

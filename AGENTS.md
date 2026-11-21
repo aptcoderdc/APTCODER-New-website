@@ -21,6 +21,20 @@ something here conflicts with a new request.
   tsconfig paths).
 - So far the owner has pushed from GitHub Desktop, and agents have committed locally.
 
+## SEO (technical)
+- The site address is in `src/site/data/site.json` (now https://newweb.aptcoder.com). If the site
+  moves domain, change it there: canonical tags, structured data, sitemap.xml and robots.txt follow.
+- Every route builds its head with `pageHead()` in `src/site/seo.ts`: title, description,
+  canonical (with the trailing slash GitHub Pages serves), Open Graph/Twitter tags with
+  `public/images/brand/og-image.jpg`, robots, and JSON-LD (home: EducationalOrganization and
+  WebSite; course pages: Course and BreadcrumbList).
+- `npm run build:pages` also runs `scripts/write-seo-files.mjs`, which writes sitemap.xml and
+  robots.txt into the build from the page list in `scripts/site-pages.mjs` (also used for the
+  pre-render). Pages marked noindex stay out of the sitemap.
+- Course pages are `noindex` until a course has `offeringApproved: true` (the workbook has no
+  approval column yet, so all of them are noindex for now).
+- Header and menu items are real links (`PageLink`), so search engines can follow them.
+
 ## Course catalogue
 - Source: `docs/Course_Catalogue_Website.xlsx`, sheet "Course Master (2)", with allowed values in
   "Lists (2)". `scripts/sync-course-catalogue.py` regenerates

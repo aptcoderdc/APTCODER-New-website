@@ -37,11 +37,14 @@ export default function AboutPage({ navigate }: Props) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-8 lg:gap-12 items-center">
           <div>
             <div className="section-label mb-4">{t('ABOUT APTCODER', 'APTCODER के बारे में')}</div>
-            <h1 className="text-[2rem] sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-2">
-              {t('Opening a Brighter Future', 'तकनीक के साथ')}
-            </h1>
-            <h1 className="text-[1.75rem] sm:text-3xl lg:text-4xl font-black text-[#E8401C] leading-tight mb-5 sm:mb-6">
-              {t('Through Technology', 'उज्ज्वल भविष्य की ओर')}
+            {/* One heading for the page (two lines, styled as before). */}
+            <h1 className="mb-5 sm:mb-6">
+              <span className="block text-[2rem] sm:text-4xl lg:text-5xl font-black text-gray-900 leading-tight mb-2">
+                {t('Opening a Brighter Future', 'तकनीक के साथ')}
+              </span>{' '}
+              <span className="block text-[1.75rem] sm:text-3xl lg:text-4xl font-black text-[#E8401C] leading-tight">
+                {t('Through Technology', 'उज्ज्वल भविष्य की ओर')}
+              </span>
             </h1>
             <p className="text-gray-600 leading-relaxed mb-8 max-w-lg">
               {t(

@@ -5,6 +5,10 @@ import { sectionIds, type Page, type SiteNavigate } from "../page";
 import { SIGN_IN_URL, SIGN_UP_URL } from "../data/contact";
 import { useLanguage } from "./LanguageContext";
 import AptcoderLogo from "./AptcoderLogo";
+import PageLink from "./PageLink";
+
+const menuItemClass =
+  "flex min-h-12 w-full items-center justify-between rounded-xl px-1 text-left text-base font-semibold";
 import { useKccJoin } from "./kcc/KccContext";
 import { useFreeClass } from "./freeClass/FreeClassContext";
 
@@ -37,6 +41,7 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
   };
   const pageItem = (label: string, page: Page) => ({
     label,
+    page,
     current: currentPage === page,
     onSelect: () => go(page),
   });
@@ -49,6 +54,7 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
         pageItem(t("C-NAT Olympiad", "C-NAT ओलंपियाड"), "cnat"),
         {
           label: t("Kids Coding Community", "किड्स कोडिंग कम्युनिटी"),
+          page: undefined,
           current: false,
           onSelect: () => {
             setMobileOpen(false);
@@ -94,21 +100,24 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <button
-            onClick={() => navigate("home")}
+          <PageLink
+            page="home"
+            navigate={navigate}
             className="flex min-h-11 items-center shrink-0"
             aria-label="APTCODER home"
           >
             {/* The full menu shows from 1024px; narrower screens use the menu button. */}
             <AptcoderLogo className="h-9 lg:h-10" eager />
-          </button>
+          </PageLink>
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-8">
             {links.map((link) => (
-              <button
+              <PageLink
                 key={link.page}
-                onClick={() => navigate(link.page)}
+                page={link.page}
+                navigate={navigate}
+                aria-current={currentPage === link.page ? "page" : undefined}
                 className={`nav-link text-sm font-medium transition-colors ${
                   currentPage === link.page
                     ? "text-[#E8401C] active"
@@ -116,7 +125,7 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
                 }`}
               >
                 {link.label}
-              </button>
+              </PageLink>
             ))}
           </div>
 
@@ -197,14 +206,15 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
           >
             <DialogPrimitive.Title className="sr-only">{t("Menu", "मेनू")}</DialogPrimitive.Title>
             <div className="flex h-16 shrink-0 items-center justify-between border-b border-gray-100 px-4 sm:px-6">
-              <button
-                type="button"
-                onClick={() => go("home")}
-                className="flex items-center"
+              <PageLink
+                page="home"
+                navigate={navigate}
+                onNavigate={() => setMobileOpen(false)}
+                className="flex min-h-11 items-center"
                 aria-label="APTCODER home"
               >
                 <AptcoderLogo className="h-9" />
-              </button>
+              </PageLink>
               <DialogPrimitive.Close
                 aria-label={t("Close menu", "मेनू बंद करें")}
                 className="-mr-2 flex h-11 w-11 items-center justify-center rounded-full text-gray-600 hover:bg-gray-100"
@@ -267,19 +277,32 @@ export default function Navbar({ currentPage, navigate }: NavbarProps) {
                   <ul className="mt-1">
                     {group.items.map((item) => (
                       <li key={item.label}>
-                        <button
-                          type="button"
-                          onClick={item.onSelect}
-                          aria-current={item.current ? "page" : undefined}
-                          className={`flex min-h-12 w-full items-center justify-between rounded-xl px-1 text-left text-base font-semibold ${
-                            item.current ? "text-[#E8401C]" : "text-gray-800"
-                          }`}
-                        >
-                          {item.label}
-                          <span aria-hidden="true" className="text-gray-300">
-                            ›
-                          </span>
-                        </button>
+                        {/* Pages are real links; KCC opens its popup, so it stays a button. */}
+                        {item.page ? (
+                          <PageLink
+                            page={item.page}
+                            navigate={navigate}
+                            onNavigate={() => setMobileOpen(false)}
+                            aria-current={item.current ? "page" : undefined}
+                            className={`${menuItemClass} ${item.current ? "text-[#E8401C]" : "text-gray-800"}`}
+                          >
+                            {item.label}
+                            <span aria-hidden="true" className="text-gray-300">
+                              ›
+                            </span>
+                          </PageLink>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={item.onSelect}
+                            className={`${menuItemClass} text-gray-800`}
+                          >
+                            {item.label}
+                            <span aria-hidden="true" className="text-gray-300">
+                              ›
+                            </span>
+                          </button>
+                        )}
                       </li>
                     ))}
                   </ul>

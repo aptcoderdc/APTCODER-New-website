@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { pageHead } from "@/site/seo";
 import LegalPage from "@/site/components/legal/LegalPage";
 import { privacyPolicy } from "@/site/data/legal/privacyPolicy";
 
@@ -7,14 +8,12 @@ const DESCRIPTION =
   "How SNN EDUWORLD Private Limited (APTCODER) collects, uses, shares and protects your personal information.";
 
 export const Route = createFileRoute("/privacy-policy")({
-  head: () => ({
-    meta: [
-      { title: TITLE },
-      { name: "description", content: DESCRIPTION },
-      { property: "og:title", content: TITLE },
-      { property: "og:description", content: DESCRIPTION },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/privacy-policy",
+      title: TITLE,
+      description: DESCRIPTION,
+    }),
   component: PrivacyPolicyRoute,
 });
 

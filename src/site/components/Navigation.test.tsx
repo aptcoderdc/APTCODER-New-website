@@ -110,7 +110,9 @@ describe("navbar", () => {
     withProviders(<Navbar currentPage="school" navigate={navigate} />);
     fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
     const menu = within(screen.getByRole("dialog", { name: "Menu" }));
-    expect(menu.getByRole("button", { name: /School/ })).toHaveAttribute("aria-current", "page");
+    // Page items are real links (crawlable, can open in a new tab).
+    expect(menu.getByRole("link", { name: /School/ })).toHaveAttribute("aria-current", "page");
+    expect(menu.getByRole("link", { name: /School/ })).toHaveAttribute("href", pageHref("school"));
     fireEvent.keyDown(screen.getByRole("dialog", { name: "Menu" }), { key: "Escape" });
     expect(screen.queryByRole("dialog", { name: "Menu" })).toBeNull();
     for (const [label, page] of [
@@ -123,7 +125,7 @@ describe("navbar", () => {
     ] as const) {
       fireEvent.click(screen.getByRole("button", { name: "Open menu" }));
       fireEvent.click(
-        within(screen.getByRole("dialog", { name: "Menu" })).getByRole("button", { name: label }),
+        within(screen.getByRole("dialog", { name: "Menu" })).getByRole("link", { name: label }),
       );
       expect(navigate).toHaveBeenLastCalledWith(page, undefined);
       expect(screen.queryByRole("dialog", { name: "Menu" })).toBeNull();
@@ -151,6 +153,22 @@ describe("navbar", () => {
       }),
     );
     expect(screen.getByRole("dialog")).toHaveTextContent("Become a KCC Member");
+  });
+});
+
+describe("header links", () => {
+  it("are real links to each page that still navigate inside the site", () => {
+    const navigate = vi.fn();
+    withProviders(<Navbar currentPage="about" navigate={navigate} />);
+    const about = screen.getByRole("link", { name: "About" });
+    expect(about).toHaveAttribute("href", pageHref("about"));
+    expect(about).toHaveAttribute("aria-current", "page");
+    fireEvent.click(about);
+    expect(navigate).toHaveBeenCalledWith("about", undefined);
+    expect(screen.getByRole("link", { name: "APTCODER home" })).toHaveAttribute(
+      "href",
+      pageHref("home"),
+    );
   });
 });
 

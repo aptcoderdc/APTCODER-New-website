@@ -89,3 +89,9 @@ node scripts/serve-pages-build.mjs
 
 Then open http://localhost:8090 and visit pages directly (not only by clicking through), since
 that is how a broken path shows up.
+
+# Sitemap and robots.txt
+
+`npm run build:pages` runs `scripts/write-seo-files.mjs` after the build. It writes
+`dist/client/sitemap.xml` (every indexable page from `scripts/site-pages.mjs`) and
+`dist/client/robots.txt` (points to the sitemap), using the address in `src/site/data/site.json`.

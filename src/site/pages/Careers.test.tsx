@@ -65,14 +65,15 @@ describe("Careers", () => {
   it("is the last item in the header, after Contact Us", () => {
     const navigate = vi.fn();
     withProviders(<Navbar currentPage="home" navigate={navigate} />);
+    // Header items are links (crawlable), in this order.
     const labels = screen
-      .getAllByRole("button")
+      .getAllByRole("link")
       .map((b) => b.textContent?.trim())
       .filter((t) => ["Courses", "School", "About", "Contact Us", "Careers"].includes(t ?? ""));
     expect(labels.slice(0, 5)).toEqual(["Courses", "School", "About", "Contact Us", "Careers"]);
     expect(screen.queryByText("Work with Us")).toBeNull();
-    fireEvent.click(screen.getAllByRole("button", { name: "Careers" })[0]!);
-    expect(navigate).toHaveBeenCalledWith("careers");
+    fireEvent.click(screen.getAllByRole("link", { name: "Careers" })[0]!);
+    expect(navigate).toHaveBeenCalledWith("careers", undefined);
   });
 
   it("is in the footer's Company column", () => {

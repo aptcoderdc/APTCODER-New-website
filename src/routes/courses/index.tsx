@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import CoursesPage from "@/site/pages/CoursesPage";
+import { pageHead } from "@/site/seo";
 import {
   parseCatalogueSearch,
   serializeCatalogueSearch,
@@ -11,23 +12,15 @@ export const Route = createFileRoute("/courses/")({
   validateSearch: validateCatalogueSearch,
   loaderDeps: ({ search }) => ({ query: search }),
   loader: ({ deps }) => ({ noindex: hasSearchState(deps.query) }),
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: "APTCODER | Courses" },
-      {
-        name: "description",
-        content:
-          "Explore APTCODER technology courses by subject, learning model, grade, language and program type.",
-      },
-      { property: "og:title", content: "APTCODER | Courses" },
-      {
-        property: "og:description",
-        content:
-          "Explore APTCODER technology courses by subject, learning model, grade, language and program type.",
-      },
-      { name: "robots", content: loaderData?.noindex ? "noindex, follow" : "index, follow" },
-    ],
-  }),
+  head: ({ loaderData }) =>
+    pageHead({
+      path: "/courses",
+      title: "APTCODER | Courses",
+      description:
+        "Explore APTCODER technology courses by subject, learning model, grade, language and program type.",
+      // Filtered or searched views are variations of this page, so only the plain list is indexed.
+      noindex: loaderData?.noindex,
+    }),
   component: CoursesCatalogueRoute,
 });
 
