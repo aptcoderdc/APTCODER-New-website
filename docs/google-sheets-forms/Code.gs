@@ -15,7 +15,8 @@
  *   - is added as a new row in its form's tab (with date/time),
  *   - emails the team addresses listed in Settings for that form,
  *   - emails the visitor a short confirmation (in Hindi if they used the site in Hindi), when
- *     they gave an email address and confirmations are switched on in Settings.
+ *     confirmations are switched on in Settings. Free Class requests always include an email
+ *     address (the website requires it, and so does this script); the other forms ask for one too.
  * The website shows "received" only when this script answers { ok: true }, i.e. after the row
  * was saved. A failed email never loses the row.
  */
@@ -27,6 +28,9 @@ const FORMS = {
     title: "Free class request",
     titleHi: "मुफ़्त क्लास का अनुरोध",
     nameField: "parentName",
+    // A request without these is refused (the website requires them too), so every request can
+    // be followed up and every parent gets the confirmation email.
+    required: ["studentName", "grade", "parentName", "mobile", "email"],
     columns: [
       ["Student's Name", "studentName"],
       ["Class/Grade", "grade"],
@@ -154,6 +158,11 @@ function doPost(e) {
   const values = form.columns.map(([, key]) => clean(data[key]).slice(0, 2000));
   const page = clean(body.page).slice(0, 300);
   if (!values.some(Boolean)) return json({ ok: false, reason: "invalid" });
+  const required = form.required || [];
+  if (required.some((key) => !clean(data[key]))) return json({ ok: false, reason: "invalid" });
+  if (required.includes("email") && !isEmail(clean(data.email))) {
+    return json({ ok: false, reason: "invalid" });
+  }
 
   // 1. Save the row (the part that must succeed).
   let sheet, row;

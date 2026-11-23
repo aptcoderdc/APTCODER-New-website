@@ -19,7 +19,7 @@ const valid = {
   grade: "Class 6",
   parentName: "Ravi Verma",
   mobile: "+91 98765 12345",
-  email: "",
+  email: "ravi@example.com",
   city: "",
   interest: "Python",
   language: "Hindi",
@@ -30,7 +30,7 @@ const valid = {
 };
 
 describe("free class validation rules", () => {
-  it("needs the student, class, parent, mobile, language and consent; email and city are optional", () => {
+  it("needs the student, class, parent, mobile, email, language and consent; city is optional", () => {
     expect(freeClassRequestSchema.safeParse(valid).success).toBe(true);
     const result = freeClassRequestSchema.safeParse({
       ...valid,
@@ -55,6 +55,12 @@ describe("free class validation rules", () => {
       ]),
     );
     expect(fields).not.toContain("city");
+    // Email is required, so the confirmation email can always be sent.
+    const noEmail = freeClassRequestSchema.safeParse({ ...valid, email: "" });
+    expect(noEmail.success).toBe(false);
+    expect(noEmail.success ? [] : noEmail.error.issues.map((i) => i.message)).toContain(
+      "Please enter an email address.",
+    );
   });
 });
 
@@ -76,7 +82,7 @@ describe("free class delivery to the Google Sheet", () => {
       grade: "Class 6",
       parentName: "Ravi Verma",
       mobile: "+919876512345",
-      email: "",
+      email: "ravi@example.com",
       city: "",
       interest: "Python",
       language: "Hindi",
@@ -122,6 +128,7 @@ describe("Book a Free Class popup", () => {
       target: { value: valid.parentName },
     });
     fireEvent.change(dialog.getByLabelText(/Mobile Number/), { target: { value: valid.mobile } });
+    fireEvent.change(dialog.getByLabelText(/^Email/), { target: { value: valid.email } });
     fireEvent.change(dialog.getByLabelText(/Interested In/), { target: { value: valid.interest } });
     fireEvent.click(dialog.getByLabelText("Hindi"));
     fireEvent.change(dialog.getByLabelText(/Preferred Time/), {
@@ -143,6 +150,7 @@ describe("Book a Free Class popup", () => {
     ).toBeInTheDocument();
     expect(dialog.getByText("Please choose the student’s class.")).toBeInTheDocument();
     expect(dialog.getByText("Please choose a class language.")).toBeInTheDocument();
+    expect(dialog.getByText("Please enter an email address.")).toBeInTheDocument();
     expect(dialog.getByText(/Please agree to be contacted/)).toBeInTheDocument();
     expect(submit).not.toHaveBeenCalled();
   });

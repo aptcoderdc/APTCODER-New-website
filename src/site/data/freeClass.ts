@@ -54,14 +54,13 @@ export const freeClassRequestSchema = z.object({
     .refine((v) => normaliseIndianMobile(v) !== null, {
       message: "Please enter a valid 10-digit Indian mobile number.",
     }),
+  // Required: the confirmation email (sent by the Google Sheet's script) goes to this address.
   email: z
     .string()
     .trim()
-    .max(160)
-    .refine((v) => v === "" || z.string().email().safeParse(v).success, {
-      message: "Please enter a valid email address, or leave it empty.",
-    })
-    .optional(),
+    .min(1, "Please enter an email address.")
+    .max(160, "Please shorten this.")
+    .email("Please enter a valid email address."),
   city: optionalText(80),
   interest: z.enum(FREE_CLASS_INTERESTS, {
     errorMap: () => ({ message: "Please choose what your child would like to learn." }),

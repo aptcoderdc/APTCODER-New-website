@@ -24,7 +24,7 @@ export type SheetForms = {
     grade: string;
     parentName: string;
     mobile: string;
-    email?: string;
+    email: string;
     city?: string;
     interest: string;
     language: string;

@@ -21,7 +21,7 @@ export async function deliverFreeClassRequest(
       grade: request.grade,
       parentName: request.parentName,
       mobile: `+91${normaliseIndianMobile(request.mobile)}`,
-      email: request.email || "",
+      email: request.email,
       city: request.city || "",
       interest: request.interest,
       language: request.language,

@@ -290,7 +290,7 @@ export default function FreeClassModal({
                         {...register("mobile")}
                       />
                     </Field>
-                    <Field id="fc-email" label="Email" optional error={errors.email?.message}>
+                    <Field id="fc-email" label="Email" error={errors.email?.message}>
                       <input
                         id="fc-email"
                         type="email"
