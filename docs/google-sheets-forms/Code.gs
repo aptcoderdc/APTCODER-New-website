@@ -3,19 +3,25 @@
 /**
  * APTCODER website forms → Google Sheet + email notifications.
  *
+ * Account: hello@aptcoder.com owns the sheet, runs this script and sends every email (team
+ * notifications and customer confirmations). Sign in as hello@aptcoder.com for all the steps.
+ *
  * Paste this whole file into the sheet's Apps Script editor (Extensions → Apps Script),
  * replacing everything there. Then use the "Website Forms" menu in the sheet:
- *   1. "Set up tabs"        – creates one tab per form and the Settings tab (safe to run again).
- *   2. Fill in the Settings tab (team emails, reply-to address).
- *   3. "Send test email"    – checks that emails arrive.
- * Then the account that should send the emails deploys it: Deploy → New deployment → Web app,
- * Execute as: Me, Who has access: Anyone. The web app URL it shows goes into the website.
+ *   1. "Set up tabs"              – creates one tab per form and the Settings tab, and adds any
+ *                                   missing settings to an existing one (safe to run again).
+ *   2. Check the Settings tab (team emails, confirmation BCC, reply-to address).
+ *   3. "Send test email"          – sends a sample team notification.
+ *   4. "Send test confirmation"   – sends a sample customer confirmation (with the BCC).
+ * Then deploy it as hello@aptcoder.com: Deploy → New deployment → Web app, Execute as: Me, Who has
+ * access: Anyone. The web app URL it shows goes into the website (SHEET_FORMS_URL).
  *
  * Every submission:
  *   - is added as a new row in its form's tab (with date/time),
  *   - emails the team addresses listed in Settings for that form,
  *   - emails the visitor a short confirmation (in Hindi if they used the site in Hindi), when
- *     confirmations are switched on in Settings. Free Class requests always include an email
+ *     confirmations are switched on in Settings, with a hidden copy (BCC) to the addresses in
+ *     "Confirmation BCC" (the sales team), so the customer does not see them. Free Class requests always include an email
  *     address (the website requires it, and so does this script); the other forms ask for one too.
  * The website shows "received" only when this script answers { ok: true }, i.e. after the row
  * was saved. A failed email never loses the row.
@@ -125,11 +131,16 @@ const SETTINGS = [
   ["Sender name", "APTCODER", "Name shown on all emails."],
   ["Reply-to address", "hello@aptcoder.com", "Where customers' replies to confirmation emails go."],
   ["Send customer confirmations", "Yes", "Yes or No."],
-  ["Team emails: Free Class", "", "Comma-separated addresses. Empty = no team email."],
-  ["Team emails: KCC", "", ""],
-  ["Team emails: Contact", "", ""],
-  ["Team emails: School Kit", "", ""],
-  ["Team emails: Recorded Class", "", ""],
+  [
+    "Confirmation BCC",
+    "shubham.s@aptcoder.in",
+    "Hidden copy of every customer confirmation (sales). Comma-separated. Empty = no BCC.",
+  ],
+  ["Team emails: Free Class", "hello@aptcoder.com", "Comma-separated addresses. Empty = no team email."],
+  ["Team emails: KCC", "hello@aptcoder.com", ""],
+  ["Team emails: Contact", "hello@aptcoder.com", ""],
+  ["Team emails: School Kit", "hello@aptcoder.com", ""],
+  ["Team emails: Recorded Class", "hello@aptcoder.com", ""],
 ];
 
 // ── Website endpoint ──────────────────────────────────────────────────────────────────────────
@@ -238,8 +249,11 @@ function sendConfirmation(form, fields, lang, settings) {
     const message = fill(hi ? form.thanksHi : form.thanks, fields);
     const signOff = hi ? "धन्यवाद,<br>टीम APTCODER" : "Warm regards,<br>Team APTCODER";
     const replyTo = settings["Reply-to address"];
+    // Sales gets a hidden copy: the customer sees only their own address.
+    const bcc = emailList(settings["Confirmation BCC"]);
     MailApp.sendEmail({
       to: fields.email,
+      ...(bcc ? { bcc } : {}),
       subject: hi ? `हमें आपका ${form.titleHi} मिल गया है` : `We've received your ${form.title.toLowerCase()}`,
       name: settings["Sender name"] || "APTCODER",
       ...(isEmail(replyTo) ? { replyTo } : {}),
@@ -247,7 +261,7 @@ function sendConfirmation(form, fields, lang, settings) {
         `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#111827">` +
         `<p>${esc(greeting)}</p><p>${esc(message)}</p><p>${signOff}</p></div>`,
     });
-    return "Sent";
+    return bcc ? "Sent (BCC: " + bcc + ")" : "Sent";
   } catch (err) {
     console.error("Confirmation email failed: " + err);
     return "Failed: " + String(err).slice(0, 100);
@@ -261,6 +275,7 @@ function onOpen() {
     .createMenu("Website Forms")
     .addItem("Set up tabs", "setUpTabs")
     .addItem("Send test email", "sendTestEmail")
+    .addItem("Send test confirmation", "sendTestConfirmation")
     .addToUi();
 }
 
@@ -274,6 +289,15 @@ function setUpTabs() {
     settings.getRange(1, 1, 1, 3).setFontWeight("bold").setBackground("#FFE8E0");
     settings.setColumnWidth(1, 240).setColumnWidth(2, 360).setColumnWidth(3, 380);
     settings.setFrozenRows(1);
+  } else {
+    // An existing Settings tab keeps its values; settings added in a newer version are appended.
+    const existing = settings
+      .getRange(1, 1, Math.max(settings.getLastRow(), 1), 1)
+      .getValues()
+      .map(([key]) => String(key).trim());
+    SETTINGS.slice(1)
+      .filter(([key]) => !existing.includes(key))
+      .forEach((row) => settings.appendRow(row));
   }
   Object.keys(FORMS).forEach((key) => ensureTab(FORMS[key]));
   // Remove the empty default "Sheet1" if it is still there.
@@ -297,6 +321,26 @@ function sendTestEmail() {
     htmlBody: "<p>This is a test. Website form notifications will arrive like this.</p>",
   });
   SpreadsheetApp.getUi().alert("Test email sent to: " + to);
+}
+
+/**
+ * Sends a sample customer confirmation (Free Class, English) to the "Reply-to address", with the
+ * "Confirmation BCC" copy, so both inboxes can check delivery.
+ */
+function sendTestConfirmation() {
+  const settings = readSettings();
+  const to = settings["Reply-to address"];
+  if (!isEmail(to)) {
+    SpreadsheetApp.getUi().alert('Add an address next to "Reply-to address" in Settings first.');
+    return;
+  }
+  const result = sendConfirmation(
+    FORMS.free_class,
+    { parentName: "Test Parent", studentName: "Test Student", mobile: "+91 00000 00000", email: to },
+    "en",
+    { ...settings, "Send customer confirmations": "Yes" },
+  );
+  SpreadsheetApp.getUi().alert("Test confirmation to " + to + ": " + result);
 }
 
 function ensureTab(form) {
@@ -343,6 +387,15 @@ function forSheet(text) {
 
 function isEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || ""));
+}
+
+/** "a@x.com, b@y.com" → the valid addresses, comma-separated ("" when there are none). */
+function emailList(value) {
+  return String(value || "")
+    .split(/[,;\s]+/)
+    .map((part) => part.trim())
+    .filter(isEmail)
+    .join(",");
 }
 
 function esc(value) {

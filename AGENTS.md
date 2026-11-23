@@ -67,16 +67,22 @@ something here conflicts with a new request.
 - All five forms post to one Google Apps Script web app: Free Class, KCC, Contact, School Sales Kit
   and Recorded Class. The URL is `SHEET_FORMS_URL` in `src/site/api/sheetForms.ts`, overridable
   with `VITE_SHEET_FORMS_URL`.
-- The script source is `docs/google-sheets-forms/Code.gs`. A copy of it runs in Google under the
-  company data account, which owns the Sheet. Changing the script means pasting the new code there
-  and using Deploy → Manage deployments → Edit → New version, which keeps the URL.
+- The script source is `docs/google-sheets-forms/Code.gs`. A copy of it runs in Google under
+  hello@aptcoder.com, which owns the Sheet (no separate data account). Changing the script means
+  pasting the new code there and using Deploy → Manage deployments → Edit → New version, which
+  keeps the URL. A first deployment from a new account gives a new URL, which must go into
+  `SHEET_FORMS_URL`.
 - A form shows success only when the script answers `{ ok: true }`, i.e. after the row is saved.
   Each form has a hidden honeypot field named "website".
-- Emails are sent from the data account.
-  - The team gets a notification at the addresses in the Sheet's Settings tab ("Team emails:
-    <form>"), with reply-to set to the visitor.
+- Emails are sent from hello@aptcoder.com. Everything below is editable in the Sheet's Settings tab.
+  - The team gets a notification at "Team emails: <form>" (default hello@aptcoder.com), with
+    reply-to set to the visitor.
   - Visitors get a confirmation at the address they typed when "Send customer confirmations" is
     Yes; replies go to "Reply-to address" (hello@aptcoder.com).
+  - Every confirmation also goes as a hidden copy (BCC) to "Confirmation BCC" (default the sales
+    person, shubham.s@aptcoder.in); empty = no BCC.
+  - The Free Class form requires an email (website and script), so every request gets a
+    confirmation.
 - Known open risk, deliberately left for now: anyone can trigger confirmation emails to any
   address, and the confirmation includes text the visitor typed.
   - Ideas discussed: fixed-text confirmations, per-address and hourly limits, and Cloudflare
