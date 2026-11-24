@@ -11,11 +11,12 @@ import { LANGUAGE_STORAGE_KEY } from "@/site/components/LanguageContext";
  * cannot answer one). A form may only say "received" when this returns { ok: true }, which the
  * script answers only after the row was saved.
  *
+ * The web app runs under hello@aptcoder.com (which owns the Sheet and sends the emails).
  * To move to a new deployment, change SHEET_FORMS_URL (or set VITE_SHEET_FORMS_URL).
  */
 export const SHEET_FORMS_URL: string =
   (import.meta.env?.["VITE_SHEET_FORMS_URL"] as string | undefined)?.trim() ||
-  "https://script.google.com/macros/s/AKfycbyxbv4kO46O8t-8XhU50vfpegmMzjSnD52n3vvvlmsEYEFYMqCfTp1gE5OG7bh37awQ/exec";
+  "https://script.google.com/macros/s/AKfycbzFReiXU-lE5l8NzC0XrH1NQ1PG0KDPvzo8ZugI7L1CEEVzAb8PAu3lTsoZf9wbEgUt/exec";
 
 /** Form keys and field names exactly as Code.gs (FORMS) expects them. */
 export type SheetForms = {
